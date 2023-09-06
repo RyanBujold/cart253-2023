@@ -2,8 +2,7 @@
  * Drawing Experiments
  * Ryan Bujold
  * 
- * This is a template. You must fill in the title, author, 
- * and this description to match your project!
+ * Experimenting with drawing shapes on the canvas.
  */
 
 "use strict";
@@ -17,13 +16,16 @@ function preload() {
 
 
 /**
- * Description of setup
+ * Draws a canvas with colored shapes and lines.
 */
 function setup() {
     createCanvas(500,500);
 
+    // Setting the background to green
     background(100,255,100);
 
+    // Make the color of lines purple and 
+    // the color of shapes a darker green
     stroke(255,0,255);
     fill(0,255,100);
 
@@ -31,12 +33,16 @@ function setup() {
     line(0,0,300,500);
     line(250,0,250,500);
     ellipse(250,250,100,50);
-
+    
+    // Change the color to light blue and
+    // the make it a bit transparent
     fill(0,100,255,100);
     rectMode(CENTER);
     rect(250,250,30,30);
     point(250,250);
 
+    // Remove the outline from the shapes and draw
+    // as set of transparent ellipses
     noStroke();
     ellipseMode(CORNER);
     ellipse(400,250,40,60);
