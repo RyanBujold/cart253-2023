@@ -39,6 +39,14 @@ function setup() {
     fill(54, 227, 57);//green
     ellipse(300,250,400,500);
 
+    // Draw the eyes
+    fill(0,0,0);
+    ellipse(200,250,100,140);
+    ellipse(400,250,100,140);
+    fill(255,255,255);
+    ellipse(220,210,20);
+    ellipse(420,210,20);
+
 }
 
 
