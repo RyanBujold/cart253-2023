@@ -40,12 +40,21 @@ function setup() {
     ellipse(300,250,400,500);
 
     // Draw the eyes
-    fill(0,0,0);
+    fill(0,0,0);//black
     ellipse(200,250,100,140);
     ellipse(400,250,100,140);
-    fill(255,255,255);
+    fill(255,255,255);//white
     ellipse(220,210,20);
     ellipse(420,210,20);
+
+    // Draw the nostrils
+    fill(0,0,0,150);//black with transparency
+    ellipse(280,350,20,10);
+    ellipse(320,350,20,10);
+
+    // Draw the mouth
+    fill(0,0,0);//black
+    quad(250,400,300,420,350,400,300,450);
 
 }
 
