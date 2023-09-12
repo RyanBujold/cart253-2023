@@ -4,12 +4,12 @@
  * 
  * Using javascript and p5 drawing instructions to 
  * draw an alien on a canvas.
- */
+*/
 
 "use strict";
 
 /**
- * Description of preload
+ * Load files before the program starts.
 */
 function preload() {
 
