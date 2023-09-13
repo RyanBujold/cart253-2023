@@ -20,6 +20,31 @@ let box = {
     color:150,
 }
 
+let ball = {
+    x:100,
+    y:100,
+    w:100,
+    h:100,
+    red:200,
+    green:100,
+    blue:0,
+    velocity:2,
+    gravity:1.05,
+    bounce:20,
+}
+
+let triangle = {
+    x1:10,
+    y1:10,
+    x2:20,
+    y2:10,
+    x3:15,
+    y3:20,
+    red:0,
+    green:255,
+    blue:255,
+}
+
 /**
  * Preload files
 */
@@ -41,7 +66,21 @@ function setup() {
  * Draw shapes moving across the canvas
 */
 function draw() {
-    background(100,0,100);
+    background(0,50,200);
+
+    // Ball
+    fill(ball.red, ball.green, ball.blue);
+    ellipse(ball.x, ball.y, ball.w, ball.h);
+    ball.x += ball.velocity;
+    ball.y = ball.y + ball.gravity;
+    ball.gravity += 0.5;
+    ball.w = map(ball.y, 0, canvasHeight, 10,150);
+    if(ball.x > canvasWidth){
+        ball.x = 0;
+    }
+    if(ball.y > canvasHeight){
+        ball.gravity = -ball.bounce;
+    }
 
     // Box
     fill(box.color);
