@@ -7,8 +7,21 @@
 
 "use strict";
 
+let canvasWidth = 800;
+let canvasHeight = 600;
+
+let box = {
+    x:50,
+    y:50,
+    w:100,
+    h:50,
+    xVelocity:2,
+    yVelocity:2,
+    color:150,
+}
+
 /**
- * Description of preload
+ * Preload files
 */
 function preload() {
 
@@ -16,16 +29,29 @@ function preload() {
 
 
 /**
- * Description of setup
+ * Setup the canvas
 */
 function setup() {
-
+    createCanvas(canvasWidth,canvasHeight);
+    noStroke();
 }
 
 
 /**
- * Description of draw()
+ * Draw shapes moving across the canvas
 */
 function draw() {
+    background(100,0,100);
 
+    // Box
+    fill(box.color);
+    rect(box.x, box.y, box.w, box.h);
+    box.x += box.xVelocity;
+    box.y += box.yVelocity;
+    if(box.x + box.w > canvasWidth || box.x < 0){ 
+        box.xVelocity = -box.xVelocity;
+    }
+    if(box.y + box.h > canvasHeight || box.y < 0){
+        box.yVelocity = -box.yVelocity;
+    }
 }
