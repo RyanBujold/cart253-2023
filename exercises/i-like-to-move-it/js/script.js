@@ -13,11 +13,13 @@ let canvasHeight = 600;
 let box = {
     x:50,
     y:50,
-    w:100,
-    h:50,
+    w:200,
+    h:75,
+    red:0,
+    green:0,
+    blue:0,
     xVelocity:2,
     yVelocity:2,
-    color:150,
 }
 
 let ball = {
@@ -91,14 +93,21 @@ function draw() {
     }
 
     // Box
-    fill(box.color);
+    fill(box.red, box.green, box.blue);
     rect(box.x, box.y, box.w, box.h);
     box.x += box.xVelocity;
     box.y += box.yVelocity;
     if(box.x + box.w > canvasWidth || box.x < 0){ 
         box.xVelocity = -box.xVelocity;
+        box.red = random(0,255);
+        box.green = random(0,255);
+        box.blue = random(0,255);
     }
     if(box.y + box.h > canvasHeight || box.y < 0){
         box.yVelocity = -box.yVelocity;
+        box.red = random(0,255);
+        box.green = random(0,255);
+        box.blue = random(0,255);
     }
+
 }
