@@ -7,9 +7,14 @@
 
 "use strict";
 
+// The canvas's dimensions
 let canvasWidth = 800;
 let canvasHeight = 600;
 
+// If true, draw the background every frame
+let drawBackground = true;
+
+// A bouncing box
 let box = {
     x:50,
     y:50,
@@ -22,6 +27,7 @@ let box = {
     yVelocity:2,
 }
 
+// A bouncing ball
 let ball = {
     x:100,
     y:100,
@@ -35,6 +41,7 @@ let ball = {
     bounce:20,
 }
 
+// A triangle
 let pyramid = {
     x1:100,
     y1:50,
@@ -68,26 +75,41 @@ function setup() {
  * Draw shapes moving across the canvas
 */
 function draw() {
-    background(0,50,200);
+    // Draw the background if specified
+    if(drawBackground){
+        background(0,50,200);
+    }
 
-    // Triangle
+    // Pyramid
     fill(pyramid.red, pyramid.green, pyramid.blue);
     triangle(pyramid.x1, pyramid.y1, pyramid.x2, pyramid.y2, pyramid.x3, pyramid.y3);
+    // Make a point of the pyramid follow the mouse cursor
     pyramid.x1 = mouseX;
     pyramid.y1 = mouseY;
+    // Make sure the pyramid doesn't go off the canvas
     pyramid.x1 = constrain(mouseX, 0, canvasWidth);
     pyramid.y1 = constrain(mouseY, 0, canvasHeight);
 
     // Ball
     fill(ball.red, ball.green, ball.blue);
     ellipse(ball.x, ball.y, ball.w, ball.h);
+    // Move the ball to the right and apply gravity
     ball.x += ball.velocity;
     ball.y = ball.y + ball.gravity;
+    // Increase gravity so it falls faster over time
     ball.gravity += 0.5;
+    // Make the ball's width grow and shrink based on how far it
+    // is from the bottom of the canvas
     ball.w = map(ball.y, 0, canvasHeight, 10,150);
+    // If the ball touches the right side of the canvas, toggle the
+    // the background being drawn and reset the ball to the left
+    // side of the canvas
     if(ball.x > canvasWidth){
         ball.x = 0;
+        drawBackground = !drawBackground;
     }
+    // Once the ball hits the bottom of the canvas, changes its gravity
+    // so that it bounces upwards
     if(ball.y > canvasHeight){
         ball.gravity = -ball.bounce;
     }
@@ -97,12 +119,16 @@ function draw() {
     rect(box.x, box.y, box.w, box.h);
     box.x += box.xVelocity;
     box.y += box.yVelocity;
+    // If the box collides with the right or left side of the canvas, flip
+    // it's x velocity so it bounces along the x axis
     if(box.x + box.w > canvasWidth || box.x < 0){ 
         box.xVelocity = -box.xVelocity;
         box.red = random(0,255);
         box.green = random(0,255);
         box.blue = random(0,255);
     }
+    // If the box collides with the botoom or top side of the canvas, flip
+    // it's y velocity so it bounces along the y axis
     if(box.y + box.h > canvasHeight || box.y < 0){
         box.yVelocity = -box.yVelocity;
         box.red = random(0,255);
