@@ -34,13 +34,23 @@ function preload() {
  * Setup our canvas
 */
 function setup() {
-
+    createCanvas(windowWidth,windowHeight);
+    // Set the covid to a random height
+    covid19.y = random(0, height);
+    // Change the covids horizontal velocity
+    covid19.vx = covid19.speed;
 }
 
 
 /**
- * Description of draw()
+ * Draw on the canvas
 */
 function draw() {
+    background(0,0,0);
 
+    covid19.x += covid19.vx;
+    covid19.y += covid19.vy;
+    fill(covid19.fill.r, covid19.fill.g, covid19.fill.b);
+    noStroke();
+    ellipse(covid19.x, covid19.y, covid19.size);
 }
