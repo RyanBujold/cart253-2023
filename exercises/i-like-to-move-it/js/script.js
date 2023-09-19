@@ -54,6 +54,21 @@ let pyramid = {
     blue:255,
 }
 
+// A diamond
+let diamond = {
+    x1:canvasWidth/2,
+    y1:0,
+    x2:0,
+    y2:100,
+    x3:canvasWidth/2,
+    y3:0,
+    x4:0,
+    y4:50,
+    red:0,
+    green:0,
+    blue:0,
+}
+
 /**
  * Preload files
 */
@@ -79,6 +94,19 @@ function draw() {
     if(drawBackground){
         background(0,50,200);
     }
+
+    // Diamond
+    // Map the x coordinates of our other objects to the points of the diamond
+    diamond.x2 = map(ball.x, 0, canvasWidth, 100, canvasWidth);
+    diamond.y3 = map(pyramid.x1, 0, canvasWidth, 100, canvasHeight);
+    diamond.x4 = map(box.x, 0, canvasWidth, 50, canvasWidth);
+    // Map the colors of our diamond to the y coordinates of our objects
+    diamond.red = map(ball.y, 0, canvasHeight, 0, 255);
+    diamond.green = map(pyramid.y1, 0, canvasHeight, 0, 255);
+    diamond.blue = map(box.y, 0, canvasHeight, 0, 255);
+    // Draw the diamond
+    fill(diamond.red, diamond.green, diamond.blue);
+    quad(diamond.x1, diamond.y1, diamond.x2, diamond.y2, diamond.x3, diamond.y3, diamond.x4, diamond.y4);
 
     // Pyramid
     fill(pyramid.red, pyramid.green, pyramid.blue);
