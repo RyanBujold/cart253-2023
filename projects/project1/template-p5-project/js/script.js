@@ -20,7 +20,7 @@ function preload() {
  * Description of setup
 */
 function setup() {
-
+    createCanvas(windowWidth,windowHeight,WEBGL);
 }
 
 
@@ -28,5 +28,7 @@ function setup() {
  * Description of draw()
 */
 function draw() {
-
+    background(0);
+    orbitControl();
+    box(200,400,400);
 }
