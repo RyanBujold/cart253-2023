@@ -2,13 +2,16 @@
  * Dodg em
  * Ryan Bujold
  * 
- * Dodging objects moving around the canvas.
+ * Dodging objects moving around the canvas. An alien in a ufo dodges
+ * asteroids in space.
+ * 
+ * Image from https://clipart-library.com/clipart/ufo-cliparts_11.htm
  */
 
 "use strict";
 
-// A covid 19 object
-let covid19 = {
+// A asteroid 19 object
+let asteroid = {
     x:0,
     y:250,
     size:100,
@@ -22,11 +25,8 @@ let covid19 = {
     }
 }
 
-let covidArray = [covid19];
-let maxCovid = 50;
-
-// A User object
-let user = {
+// A UFO object
+let ufo = {
     x:0,
     y:0,
     size:100,
@@ -48,27 +48,31 @@ let movePoint = {
     isActive:false
 }
 
-// the static amound
-let staticAmount = 50;
+// Global variables
+let asteroidArray = [asteroid];
+let maxAsteroids = 30;
+let debrisAmount = 200;
+let img;
 
 /**
- * Description of preload
+ * Load the neccessary image files
 */
 function preload() {
-
+    img = loadImage('assets/images/Ufo-clipart-clipart.png');
 }
 
 
 /**
- * Setup our canvas
+ * Setup our canvas and variables
 */
 function setup() {
     createCanvas(windowWidth,windowHeight);
     noStroke();
-    // Set the covid to a random height
-    covid19.y = random(0, height);
-    // Change the covids horizontal velocity
-    covid19.vx = covid19.speed;
+
+    // Set the asteroid to a random height
+    asteroid.y = random(0, height);
+    // Change the asteroids horizontal velocity
+    asteroid.vx = asteroid.speed;
 }
 
 
@@ -79,100 +83,99 @@ function draw() {
     background(0,0,0);
 
     // -- Mouse Click --
+    // If the mouse is clicked, make that location the movement point
     if(mouseIsPressed === true){
         movePoint.x = mouseX;
         movePoint.y = mouseY;
         movePoint.isActive = true;
-        user.xspeed = (movePoint.x - user.x) /60;
-        user.yspeed = (movePoint.y - user.y) /60;
+        ufo.xspeed = (movePoint.x - ufo.x) /60;
+        ufo.yspeed = (movePoint.y - ufo.y) /60;
     }
 
-    // -- Static --
-    // Draw a static trail behind each covid
-    covidArray.forEach(function(currentValue){
-        let covid = currentValue;
-        for(let i = 0; i < staticAmount; i++){
-            let x = random(0,covid.x);
-            let y = random(covid.y-covid.size/2, covid.y+covid.size/2);
-            stroke(255,0,0);
+    // -- Debris --
+    // Draw a debris trail behind each asteroid
+    asteroidArray.forEach(function(currentValue){
+        let asteroid = currentValue;
+        for(let i = 0; i < debrisAmount; i++){
+            let x = random(0,asteroid.x);
+            let y = random(asteroid.y-asteroid.size/2, asteroid.y+asteroid.size/2);
+            stroke(asteroid.fill.r, asteroid.fill.g, asteroid.fill.b);
             point(x,y);
         }
     });
+    noStroke();
 
-    // -- User --
-    // If a movement point is active, move the user there
+    // -- UFO --
+    // If a movement point is active, move the ufo there
     if(movePoint.isActive){
         // Draw the movement point
         fill(movePoint.fill.r, movePoint.fill.g, movePoint.fill.b);
         ellipse(movePoint.x, movePoint.y, movePoint.size);
 
-        // If the user has reached the movepoint, stop moving and deactivate the movepoint
-        if(user.x == movePoint.x && user.y == movePoint.y){
+        // If the ufo has reached the movepoint, stop moving and deactivate the movepoint
+        if(ufo.x == movePoint.x && ufo.y == movePoint.y){
             movePoint.isActive = false;
         }
         else {
-            // If the user is to the left of the move point, move it right
-            if(user.x < movePoint.x){
-                user.x += user.xspeed;
-                // If the user has advanced past the move point, move it to the move point
-                if(user.x > movePoint.x){
-                    user.x = movePoint.x;
+            // If the ufo is to the left of the move point, move it right
+            if(ufo.x < movePoint.x){
+                ufo.x += ufo.xspeed;
+                // If the ufo has advanced past the move point, move it to the move point
+                if(ufo.x > movePoint.x){
+                    ufo.x = movePoint.x;
                 }
             }
-            // If the user is to the right of the move point, move it left
-            if(user.x > movePoint.x){
-                user.x += user.xspeed;
-                // If the user has advanced past the move point, move it to the move point
-                if(user.x < movePoint.x){
-                    user.x = movePoint.x;
+            // If the ufo is to the right of the move point, move it left
+            if(ufo.x > movePoint.x){
+                ufo.x += ufo.xspeed;
+                // If the ufo has advanced past the move point, move it to the move point
+                if(ufo.x < movePoint.x){
+                    ufo.x = movePoint.x;
                 }
             }
-            // If the user is above the move point, move it down
-            if(user.y < movePoint.y){
-                user.y += user.yspeed;
-                // If the user has advanced past the move point, move it to the move point
-                if(user.y > movePoint.y){
-                    user.y = movePoint.y;
+            // If the ufo is above the move point, move it down
+            if(ufo.y < movePoint.y){
+                ufo.y += ufo.yspeed;
+                // If the ufo has advanced past the move point, move it to the move point
+                if(ufo.y > movePoint.y){
+                    ufo.y = movePoint.y;
                 }
             }
-            // If the user is below the move point, move it up
-            if(user.y > movePoint.y){
-                user.y += user.yspeed;
-                // If the user has advanced past the move point, move it to the move point
-                if(user.y < movePoint.y){
-                    user.y = movePoint.y;
+            // If the ufo is below the move point, move it up
+            if(ufo.y > movePoint.y){
+                ufo.y += ufo.yspeed;
+                // If the ufo has advanced past the move point, move it to the move point
+                if(ufo.y < movePoint.y){
+                    ufo.y = movePoint.y;
                 }
             }
         }
     }
-    // Draw the user
-    fill(user.fill);
-    ellipse(user.x, user.y, user.size);
+    // Draw the ufo
+    image(img, ufo.x - ufo.size/2, ufo.y - ufo.size/2, ufo.size, ufo.size);
 
-    // -- Covid 19 --
-    // Perform logic for every covid 19
-    covidArray.forEach(function(currentValue){
-
-        let covid = currentValue;
+    // -- Asteroid --
+    // Perform logic for every asteroid
+    asteroidArray.forEach(function(currentValue){
+        let asteroid = currentValue;
 
         // -- Collision Checking --
-        let d = dist(user.x, user.y, covid.x, covid.y);
-        if(d < (covid.size/2) + (user.size/2)){
+        let d = dist(ufo.x, ufo.y, asteroid.x, asteroid.y);
+        if(d < (asteroid.size/2) + (ufo.size/2)){
             noLoop();
         }
 
-        covid.x += covid.vx;
-        covid.y += covid.vy;
-        fill(covid.fill.r, covid.fill.g, covid.fill.b);
-        noStroke();
-        ellipse(covid.x, covid.y, covid.size);
-        // If the covid reaches the edge of the screen,
+        asteroid.x += asteroid.vx;
+        asteroid.y += asteroid.vy;
+        fill(asteroid.fill.r, asteroid.fill.g, asteroid.fill.b);
+        ellipse(asteroid.x, asteroid.y, asteroid.size);
+        // If the asteroid reaches the edge of the screen,
         // reset it back to the left side of the window
-        if(covid.x > width){
-            covid.x = 0;
-            covid.y = random(0, height);
-            //Add a new covid to the array if it doesn't reach the max covid amount
-            if(covidArray.length < maxCovid){
+        if(asteroid.x > width){
+            asteroid.x = 0;
+            asteroid.y = random(0, height);
+            //Add a new asteroid to the array if it doesn't reach the max asteroid amount
+            if(asteroidArray.length < maxAsteroids){
                 let temp = {
                     x:0,
                     y:random(0, height),
@@ -181,17 +184,17 @@ function draw() {
                     vy:0,
                     speed:random(1,8),
                     fill:{
-                        r:255,
-                        g:0,
-                        b:0,
+                        r:random(0,255),
+                        g:random(0,255),
+                        b:random(0,255),
                     }
                 }
                 temp.vx = temp.speed;
-                covidArray.push(temp);
+                asteroidArray.push(temp);
     
-                // Make the user smaller for every additional covid
-                user.size -= 1;
-                user.size = constrain(user.size, 1, 100);
+                // Make the ufo smaller for every additional asteroid
+                ufo.size -= 1;
+                ufo.size = constrain(ufo.size, 1, 100);
             }
             
         }
