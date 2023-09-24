@@ -27,8 +27,8 @@ let asteroid = {
 
 // A UFO object
 let ufo = {
-    x:windowWidth/2,
-    y:windowHeight/2,
+    x:500,
+    y:500,
     size:100,
     fill:255,
     xspeed:0,
