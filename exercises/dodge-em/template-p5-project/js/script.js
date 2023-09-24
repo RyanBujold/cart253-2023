@@ -23,6 +23,7 @@ let covid19 = {
 }
 
 let covidArray = [covid19];
+let maxCovid = 50;
 
 // A User object
 let user = {
@@ -30,6 +31,21 @@ let user = {
     y:0,
     size:100,
     fill:255,
+    xspeed:0,
+    yspeed:0,
+}
+
+// A Movement point object
+let movePoint = {
+    x:0,
+    y:0,
+    size:5,
+    fill: {
+        r:255,
+        g:255,
+        b:0,
+    },
+    isActive:false
 }
 
 // the static amound
@@ -48,6 +64,7 @@ function preload() {
 */
 function setup() {
     createCanvas(windowWidth,windowHeight);
+    noStroke();
     // Set the covid to a random height
     covid19.y = random(0, height);
     // Change the covids horizontal velocity
@@ -60,6 +77,15 @@ function setup() {
 */
 function draw() {
     background(0,0,0);
+
+    // -- Mouse Click --
+    if(mouseIsPressed === true){
+        movePoint.x = mouseX;
+        movePoint.y = mouseY;
+        movePoint.isActive = true;
+        user.xspeed = (movePoint.x - user.x) /60;
+        user.yspeed = (movePoint.y - user.y) /60;
+    }
 
     // -- Static --
     // Draw a static trail behind each covid
@@ -74,9 +100,52 @@ function draw() {
     });
 
     // -- User --
-    noStroke();
-    user.x = mouseX;
-    user.y = mouseY;
+    // If a movement point is active, move the user there
+    if(movePoint.isActive){
+        // Draw the movement point
+        fill(movePoint.fill.r, movePoint.fill.g, movePoint.fill.b);
+        ellipse(movePoint.x, movePoint.y, movePoint.size);
+
+        // If the user has reached the movepoint, stop moving and deactivate the movepoint
+        if(user.x == movePoint.x && user.y == movePoint.y){
+            movePoint.isActive = false;
+        }
+        else {
+            // If the user is to the left of the move point, move it right
+            if(user.x < movePoint.x){
+                user.x += user.xspeed;
+                // If the user has advanced past the move point, move it to the move point
+                if(user.x > movePoint.x){
+                    user.x = movePoint.x;
+                }
+            }
+            // If the user is to the right of the move point, move it left
+            if(user.x > movePoint.x){
+                user.x += user.xspeed;
+                // If the user has advanced past the move point, move it to the move point
+                if(user.x < movePoint.x){
+                    user.x = movePoint.x;
+                }
+            }
+            // If the user is above the move point, move it down
+            if(user.y < movePoint.y){
+                user.y += user.yspeed;
+                // If the user has advanced past the move point, move it to the move point
+                if(user.y > movePoint.y){
+                    user.y = movePoint.y;
+                }
+            }
+            // If the user is below the move point, move it up
+            if(user.y > movePoint.y){
+                user.y += user.yspeed;
+                // If the user has advanced past the move point, move it to the move point
+                if(user.y < movePoint.y){
+                    user.y = movePoint.y;
+                }
+            }
+        }
+    }
+    // Draw the user
     fill(user.fill);
     ellipse(user.x, user.y, user.size);
 
@@ -102,26 +171,29 @@ function draw() {
         if(covid.x > width){
             covid.x = 0;
             covid.y = random(0, height);
-            //Add a new covid to the array
-            let temp = {
-                x:0,
-                y:random(0, height),
-                size:random(20,150),
-                vx:0,
-                vy:0,
-                speed:random(1,8),
-                fill:{
-                    r:255,
-                    g:0,
-                    b:0,
+            //Add a new covid to the array if it doesn't reach the max covid amount
+            if(covidArray.length < maxCovid){
+                let temp = {
+                    x:0,
+                    y:random(0, height),
+                    size:random(20,150),
+                    vx:0,
+                    vy:0,
+                    speed:random(1,8),
+                    fill:{
+                        r:255,
+                        g:0,
+                        b:0,
+                    }
                 }
+                temp.vx = temp.speed;
+                covidArray.push(temp);
+    
+                // Make the user smaller for every additional covid
+                user.size -= 1;
+                user.size = constrain(user.size, 1, 100);
             }
-            temp.vx = temp.speed;
-            covidArray.push(temp);
-
-            // Make the user smaller for every additional covid
-            user.size -= 1;
-            user.size = constrain(user.size, 1, 100);
+            
         }
     });
     
