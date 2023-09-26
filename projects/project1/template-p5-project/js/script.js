@@ -3,10 +3,13 @@
  * Ryan Bujold
  * 
  * A simulation project.
+ * 
+ * Fish hook image from: https://www.pinterest.ca/pin/fish-hook-silhouette-free-svg--274719646000128423/
  */
 
 "use strict";
 
+// A fish object
 let fish = {
     x:500,
     y:500,
@@ -22,11 +25,20 @@ let fish = {
     speed:5,
 }
 
+let fishingLine = {
+    x1:500,
+    y1:0,
+    x2:500,
+    y2:200,
+    fill:0,
+}
+let hookImg;
+
 /**
  * Load files
 */
 function preload() {
-
+    hookImg = loadImage('assets/images/fishHook.png');
 }
 
 
@@ -82,5 +94,12 @@ function draw() {
         fill(0);
         ellipse(fish.x - 100, fish.y, 30);
     }
+
+    // -- Fishing Line --
+    // Draw the line
+    stroke(0);
+    line(fishingLine.x1, fishingLine.y1, fishingLine.x2, fishingLine.y2);
+    noStroke();
+    image(hookImg, fishingLine.x2 - 25, fishingLine.y2, 50, 50);
     
 }
