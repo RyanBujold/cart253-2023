@@ -1,3 +1,4 @@
-# Template p5 project
+# Project 1 - Simulation
+## Ryan Bujold
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+In this project, a simple simulation will be draw and interacted with on the canvas.

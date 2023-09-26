@@ -2,8 +2,7 @@
  * Project 1
  * Ryan Bujold
  * 
- * This is a template. You must fill in the title, author, 
- * and this description to match your project!
+ * A simulation project.
  */
 
 "use strict";
@@ -20,7 +19,7 @@ function preload() {
  * Description of setup
 */
 function setup() {
-    createCanvas(windowWidth,windowHeight,WEBGL);
+    createCanvas(windowWidth,windowHeight);
 }
 
 
@@ -28,7 +27,5 @@ function setup() {
  * Description of draw()
 */
 function draw() {
-    background(0);
-    orbitControl();
-    box(200,400,400);
+    background(59, 126, 235);
 }
