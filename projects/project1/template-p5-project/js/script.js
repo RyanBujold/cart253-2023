@@ -31,6 +31,7 @@ let fishingLine = {
     x2:500,
     y2:200,
     fill:0,
+    speed:5,
 }
 let hookImg;
 
@@ -56,8 +57,26 @@ function setup() {
 */
 function draw() {
     background(59, 126, 235);
+    move();
+    display();
+}
 
-    // -- Fish --
+function move(){
+    // Move the fishing line
+    if(keyIsDown(LEFT_ARROW)){
+        fishingLine.x1 -= fishingLine.speed;
+    }
+    if(keyIsDown(RIGHT_ARROW)){
+        fishingLine.x1 += fishingLine.speed;
+    }
+    // If the fishing hook is not aligned with the fishing line,
+    // move the hook towards it
+    if(fishingLine.x1 != fishingLine.x2){
+        fishingLine.x2 += (fishingLine.x1 - fishingLine.x2) * 1/120;
+    }
+    // Let the hook sink
+    fishingLine.y2 ++;
+
     // Move the fish
     if(fish.isFacingRight){
         // Move to the right
@@ -75,31 +94,36 @@ function draw() {
             fish.isFacingRight = true;
         }
     }
-    // Draw the body
+}
+
+function mouseMoved(){
+    fishingLine.y2 -= fishingLine.speed;
+}
+
+function display(){
+    // Draw the fish's body
     fill(fish.fill.r, fish.fill.g, fish.fill.b);
     ellipse(fish.x, fish.y, fish.w, fish.h);
     if(fish.isFacingRight){
-        // Draw the fin
+        // Draw the fish' fin
         let fishEndX = fish.x - fish.w/2 + 20;
         quad(fishEndX, fish.y, fishEndX -100, fish.y -100, fishEndX -50, fish.y, fishEndX -100, fish.y +100);
-        // Draw the eye
+        // Draw the fish's eye
         fill(0);
         ellipse(fish.x + 100, fish.y, 30);
     }
     else {
-        // Draw the fin
+        // Draw the fish's fin
         let fishEndX = fish.x + fish.w/2 - 20;
         quad(fishEndX, fish.y, fishEndX +100, fish.y -100, fishEndX +50, fish.y, fishEndX +100, fish.y +100);
-        // Draw the eye
+        // Draw the fish's eye
         fill(0);
         ellipse(fish.x - 100, fish.y, 30);
     }
 
-    // -- Fishing Line --
-    // Draw the line
+    // Draw the fishing line
     stroke(0);
     line(fishingLine.x1, fishingLine.y1, fishingLine.x2, fishingLine.y2);
     noStroke();
     image(hookImg, fishingLine.x2 - 25, fishingLine.y2, 50, 50);
-    
 }
