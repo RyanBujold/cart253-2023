@@ -23,6 +23,7 @@ let fish = {
     isFacingRight:true,
     speed:5,
     isCaught:false,
+    swim:1,
 }
 
 // A fishing line
@@ -36,6 +37,7 @@ let fishingLine = {
 }
 let hookImg;
 let hookImgSize = 50;
+let counter = 0;
 
 /**
  * Load files
@@ -51,6 +53,7 @@ function preload() {
 function setup() {
     createCanvas(windowWidth,windowHeight);
     noStroke();
+    angleMode(DEGREES);
     // Randomize fish
     resetFish();
 }
@@ -83,11 +86,13 @@ function isFishCaught(){
 
 function resetFish(){
     fish.x = 0 - fish.w;
-    fish.y = random(windowHeight/4, windowHeight);
+    fish.y = random(windowHeight/3, windowHeight/2);
     fish.w = random(200, 500);
     fish.fill.r = random(0,255);
     fish.fill.g = random(0,255);
     fish.fill.b = random(0,255);
+    fish.swim = random(1,6);
+    fish.speed = random(2,10);
     fish.h = fish.w/2;
     fish.isCaught = false;
 }
@@ -140,6 +145,8 @@ function move(){
             fish.isFacingRight = true;
         }
     }
+    fish.y = fish.y + (sin(counter) * fish.swim);
+    counter ++;
 }
 
 function mouseMoved(){
