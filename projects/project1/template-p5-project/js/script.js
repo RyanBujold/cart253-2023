@@ -39,6 +39,8 @@ let hookImg;
 let hookImgSize = 50;
 let counter = 0;
 
+let state = "title";
+
 /**
  * Load files
 */
@@ -67,6 +69,58 @@ function draw() {
 }
 
 function simulation(){
+    // Run the selected state
+    switch(state){
+        case "title":
+            titleState();
+            break;
+        case "simulation":
+            fishingState();
+            break;
+    }
+}
+
+function titleState(){
+    // Draw a fishing line
+    stroke(0);
+    line(500, 0, 500, windowHeight/2);
+    noStroke();
+    image(hookImg, 500 - hookImgSize/2, windowHeight/2, hookImgSize, hookImgSize);
+
+    // Draw the title
+    fill(48, 240, 182);
+    textSize(64);
+    textFont('Georgia');
+    text('F', windowWidth/3, (windowHeight/2) + (sin(counter) * 30) );
+    text('I', windowWidth/3 + 50, (windowHeight/2) + (sin(counter + 3) * 30) );
+    text('S', windowWidth/3 + 85, (windowHeight/2) + (sin(counter + 6) * 30) );
+    text('H', windowWidth/3 + 125, (windowHeight/2) + (sin(counter + 9) * 30) );
+    text('I', windowWidth/3 + 180, (windowHeight/2) + (sin(counter + 12) * 30) );
+    text('N', windowWidth/3 + 210, (windowHeight/2) + (sin(counter + 15) *30) );
+    text('G', windowWidth/3 + 260, (windowHeight/2) + (sin(counter + 18) * 30) );
+
+    // Draw subtitle
+    fill(0);
+    textSize(50);
+    text("click to start", windowWidth/3, windowHeight/2 + 90);
+    counter ++;
+
+    // Draw the how to play information
+    fill(50);
+    textSize(50);
+    text("How to play!", windowWidth - 900, windowHeight/3);
+    text("* Catch Fish", windowWidth - 900, windowHeight/3 + 60);
+    text("* Move hook left and right ", windowWidth - 900, windowHeight/3 + 120);
+    text("  with the arrow keys", windowWidth - 900, windowHeight/3 + 180);
+    text("* Reel in line by moving mouse", windowWidth - 900, windowHeight/3 + 240);
+
+    // If the mouse is pressed, start the fishing game
+    if (mouseIsPressed === true) {
+        state = "simulation";
+    }
+}
+
+function fishingState(){
     isFishCaught();
     move();
     display();
