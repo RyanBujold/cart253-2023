@@ -38,8 +38,10 @@ let fishingLine = {
 let hookImg;
 let hookImgSize = 50;
 let counter = 0;
+let lineTension = 0;
 
 let state = "title";
+
 
 /**
  * Load files
@@ -77,6 +79,9 @@ function simulation(){
         case "simulation":
             fishingState();
             break;
+        case "caught":
+            caughtState();
+            break;
     }
 }
 
@@ -103,6 +108,7 @@ function titleState(){
     fill(0);
     textSize(50);
     text("click to start", windowWidth/3, windowHeight/2 + 90);
+    // Increase the counter to make the title move
     counter ++;
 
     // Draw the how to play information
@@ -124,6 +130,29 @@ function fishingState(){
     isFishCaught();
     move();
     display();
+}
+
+function caughtState(){
+    // Draw caught fish
+    fish.x = windowWidth/3;
+    fish.y = windowHeight/3;
+    fish.isFacingRight = true;
+    drawFish();
+
+    // Draw description
+    fill(0);
+    textSize(50);
+    text("You caught a fish!", windowWidth - 900, windowHeight/3);
+    text("* Width: "+fish.w, windowWidth - 900, windowHeight/3 + 60);
+    text("* Height: "+fish.h, windowWidth - 900, windowHeight/3 + 120);
+    text("* Speed: "+fish.speed, windowWidth - 900, windowHeight/3 + 180);
+    text("* Swim: "+fish.swim, windowWidth - 900, windowHeight/3 + 240);
+    text("-press Enter to continue-", windowWidth - 900, windowHeight/3 + 300);
+
+    if(keyIsDown(ENTER)){
+        resetFish();
+        state = "simulation";
+    }
 }
 
 function isFishCaught(){
@@ -149,6 +178,29 @@ function resetFish(){
     fish.speed = random(2,10);
     fish.h = fish.w/2;
     fish.isCaught = false;
+    lineTension = 0;
+}
+
+function drawFish(){    
+        // Draw the fish's body
+        fill(fish.fill.r, fish.fill.g, fish.fill.b);
+        ellipse(fish.x, fish.y, fish.w, fish.h);
+        if(fish.isFacingRight){
+            // Draw the fish' fin
+            let fishEndX = fish.x - fish.w/2 + 20;
+            quad(fishEndX, fish.y, fishEndX -100, fish.y -100, fishEndX -50, fish.y, fishEndX -100, fish.y +100);
+            // Draw the fish's eye
+            fill(0);
+            ellipse(fish.x + 100, fish.y, 30);
+        }
+        else {
+            // Draw the fish's fin
+            let fishEndX = fish.x + fish.w/2 - 20;
+            quad(fishEndX, fish.y, fishEndX +100, fish.y -100, fishEndX +50, fish.y, fishEndX +100, fish.y +100);
+            // Draw the fish's eye
+            fill(0);
+            ellipse(fish.x - 100, fish.y, 30);
+        }
 }
 
 function move(){
@@ -165,7 +217,16 @@ function move(){
         fishingLine.x2 += (fishingLine.x1 - fishingLine.x2) * 1/120;
     }
     // Let the hook sink
-    fishingLine.y2 ++;
+    if(!fish.isCaught){
+        fishingLine.y2 ++;
+    }
+    else{
+        // If a fish is caught, lower the tension if we are not pulling
+        fishingLine.y2 += fish.speed;
+        if(lineTension > 0){
+            lineTension --;
+        }
+    }
 
     // If the fish is caught, follow the hook
     if(fish.isCaught){
@@ -176,9 +237,17 @@ function move(){
             fish.x = fishingLine.x2 + fish.w/2;
         }
         fish.y = fishingLine.y2 + hookImgSize;
-        // Check if the fish is off screen
-        if(fish.y - fish.h/2 < 0){
+        // Check if the fishing line broke
+        if(lineTension >= 100){
             resetFish();
+        }
+        // Check if the fish went off screen or 
+        // was successfully caught
+        if(fish.y > windowHeight){
+            resetFish();
+        }
+        else if(fish.y - fish.h/2 < 0){
+            state = "caught";
         }
         return;
     }
@@ -207,29 +276,35 @@ function mouseMoved(){
     // Raise the fishing line when the mouse is moved
     if(fishingLine.y2 > -100){
         fishingLine.y2 -= fishingLine.speed;
+        if(fish.isCaught){
+            lineTension += 1.75;
+            fishingLine.y2 -= fish.speed;
+        }
     } 
 }
 
 function display(){
-    // Draw the fish's body
-    fill(fish.fill.r, fish.fill.g, fish.fill.b);
-    ellipse(fish.x, fish.y, fish.w, fish.h);
-    if(fish.isFacingRight){
-        // Draw the fish' fin
-        let fishEndX = fish.x - fish.w/2 + 20;
-        quad(fishEndX, fish.y, fishEndX -100, fish.y -100, fishEndX -50, fish.y, fishEndX -100, fish.y +100);
-        // Draw the fish's eye
+    // If the fish is caught, draw the tension gauge for the line
+    if(fish.isCaught){
         fill(0);
-        ellipse(fish.x + 100, fish.y, 30);
+        textSize(32);
+        textFont('Georgia');
+        text('Tension', windowWidth - 400, 50);
+        // Change the gauge color based on the line tension
+        if(lineTension <= 50){
+            fill(58, 235, 52); // green
+        }
+        else if(lineTension <= 80){
+            fill(230, 160, 48); // orange
+        }
+        else{
+            fill(255,0,0); // red
+        }
+        rect(windowWidth - 400, 75, 300 * lineTension/100, 50);
     }
-    else {
-        // Draw the fish's fin
-        let fishEndX = fish.x + fish.w/2 - 20;
-        quad(fishEndX, fish.y, fishEndX +100, fish.y -100, fishEndX +50, fish.y, fishEndX +100, fish.y +100);
-        // Draw the fish's eye
-        fill(0);
-        ellipse(fish.x - 100, fish.y, 30);
-    }
+
+    // Draw the fish
+    drawFish();
 
     // Draw the fishing line
     stroke(0);
