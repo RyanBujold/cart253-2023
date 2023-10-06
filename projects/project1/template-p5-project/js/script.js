@@ -86,6 +86,9 @@ function simulation(){
 }
 
 function titleState(){
+    // Draw background details
+    drawBackgroundDetails();
+
     // Draw a fishing line
     stroke(0);
     line(500, 0, 500, windowHeight/2);
@@ -129,10 +132,17 @@ function titleState(){
 function fishingState(){
     isFishCaught();
     move();
-    display();
+    displaySimulation();
 }
 
 function caughtState(){
+    // Draw backdrop
+    drawBackgroundDetails();
+    fill(166, 227, 181);
+    stroke(102, 63, 21);
+    rect(100,100,windowWidth-200,windowHeight-200);
+    noStroke();
+
     // Draw caught fish
     fish.x = windowWidth/3;
     fish.y = windowHeight/3;
@@ -203,6 +213,42 @@ function drawFish(){
             fill(0);
             ellipse(fish.x - 100, fish.y, 30);
         }
+}
+
+function drawBackgroundDetails(){
+    // Draw background details
+    // Draw sand
+    fill(234, 235, 174);
+    rect(0,windowHeight-100, windowWidth, 100);
+    ellipse(0, windowHeight, 1000, 300);
+    ellipse(windowWidth, windowHeight, 1200, 350);
+    // Draw seaweed
+    drawSeaWeed(200,200);
+    drawSeaWeed(100,220);
+    drawSeaWeed(10,190);
+    drawSeaWeed(windowWidth-200,220);
+    drawSeaWeed(windowWidth-100,190);
+}
+
+function drawSeaWeed(x,y){
+    fill(17, 115, 42);
+    rect(x, y, 25, windowHeight-325);
+    beginShape();
+    vertex(x-25, y);
+    vertex(x, y+100);
+    vertex(x-25, y+200);
+    vertex(x, y+300);
+    vertex(x-25, y+400);
+    vertex(x, y+500);
+    vertex(x-25, y+600);
+    vertex(x+50, y+600);
+    vertex(x+75, y+500);
+    vertex(x+50, y+400);
+    vertex(x+75, y+300);
+    vertex(x+50, y+200);
+    vertex(x+75, y+100);
+    vertex(x+50, y);
+    endShape(CLOSE);
 }
 
 function move(){
@@ -285,7 +331,10 @@ function mouseMoved(){
     } 
 }
 
-function display(){
+function displaySimulation(){
+    // Draw background details
+    drawBackgroundDetails();
+
     // If the fish is caught, draw the tension gauge for the line
     if(fish.isCaught){
         fill(0);
