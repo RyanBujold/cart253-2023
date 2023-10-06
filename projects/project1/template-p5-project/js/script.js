@@ -2,7 +2,7 @@
  * Project 1
  * Ryan Bujold
  * 
- * A simulation project.
+ * A simulation project of fishing. The user tries to catch the best fish while fishing.
  * 
  * Fish hook image from: https://www.pinterest.ca/pin/fish-hook-silhouette-free-svg--274719646000128423/
  */
@@ -149,6 +149,7 @@ function caughtState(){
     text("* Swim: "+fish.swim, windowWidth - 900, windowHeight/3 + 240);
     text("-press Enter to continue-", windowWidth - 900, windowHeight/3 + 300);
 
+    // When enter is pressed, continue fishing
     if(keyIsDown(ENTER)){
         resetFish();
         state = "simulation";
@@ -168,6 +169,7 @@ function isFishCaught(){
 }
 
 function resetFish(){
+    // Reset and randomize the fish
     fish.x = 0 - fish.w;
     fish.y = random(windowHeight/3, windowHeight/2);
     fish.w = random(200, 500);
