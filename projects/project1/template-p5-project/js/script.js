@@ -42,6 +42,14 @@ let lineTension = 0;
 
 let state = "title";
 
+// fish stats
+let maxtotal = 4600; //Max possible value = 4850
+let size = 0;
+let weight = 0;
+let power = 0;
+let quality = 0;
+let price = 0;
+let grade = 0;
 
 /**
  * Load files
@@ -152,13 +160,24 @@ function caughtState(){
     // Draw description
     fill(0);
     textSize(50);
-    text("You caught a fish!", windowWidth - 900, windowHeight/3);
-    text("* Width: "+fish.w, windowWidth - 900, windowHeight/3 + 60);
-    text("* Height: "+fish.h, windowWidth - 900, windowHeight/3 + 120);
-    text("* Speed: "+fish.speed, windowWidth - 900, windowHeight/3 + 180);
-    text("* Swim: "+fish.swim, windowWidth - 900, windowHeight/3 + 240);
+    text("You caught a fish!", windowWidth - 900, windowHeight/3 - 120);
+    text("* Size: "+size, windowWidth - 900, windowHeight/3 - 60);
+    text("* Weight: "+weight, windowWidth - 900, windowHeight/3);
+    text("* Power: "+power, windowWidth - 900, windowHeight/3 + 60);
+    text("* Quality: "+quality+"/10", windowWidth - 900, windowHeight/3 + 120);
+    text("* Grade: "+grade+"/10", windowWidth - 900, windowHeight/3 + 180);
+    fill(47, 222, 38);
+    text("* Price: "+price+"$", windowWidth - 900, windowHeight/3 + 240);
+    fill(0);
     text("-press Enter to continue-", windowWidth - 900, windowHeight/3 + 300);
 
+    // Draw stars to represent grade
+    let posX = 200;
+    for(let i = 0; i < grade; i++){
+        drawStar(posX,650);
+        posX += 125;
+    }
+    
     // When enter is pressed, continue fishing
     if(keyIsDown(ENTER)){
         resetFish();
@@ -231,6 +250,7 @@ function drawBackgroundDetails(){
 }
 
 function drawSeaWeed(x,y){
+    // Draw seaweed at the given x and y
     fill(17, 115, 42);
     rect(x, y, 25, windowHeight-325);
     beginShape();
@@ -248,6 +268,23 @@ function drawSeaWeed(x,y){
     vertex(x+50, y+200);
     vertex(x+75, y+100);
     vertex(x+50, y);
+    endShape(CLOSE);
+}
+
+function drawStar(x,y){
+    // Draw a star at the given x and y
+    fill(224, 224, 49);
+    beginShape();
+    vertex(x, y);
+    vertex(x+25, y+50);
+    vertex(x+60,y+75);
+    vertex(x+25, y+100);
+    vertex(x+40, y+150);
+    vertex(x, y+125);
+    vertex(x-40, y+150);
+    vertex(x-25, y+100);
+    vertex(x-60, y+75);
+    vertex(x-25, y+50);
     endShape(CLOSE);
 }
 
@@ -295,6 +332,14 @@ function move(){
             resetFish();
         }
         else if(fish.y - fish.h/2 < 0){
+            // Set the fish's stats
+            size = Math.round(fish.w + fish.h);
+            weight = Math.round(size * random(1,2)); 
+            power = Math.round(fish.speed + fish.swim); 
+            quality = Math.round(random(1,10)); 
+            price = size + weight + power*100 + quality*100;
+            grade = Math.round((price/maxtotal)*10);
+            // change to the fish caught state
             state = "caught";
         }
         return;
