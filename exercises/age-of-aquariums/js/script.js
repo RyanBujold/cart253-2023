@@ -2,82 +2,78 @@
  * The Age of Aquariums
  * Ryan Bujold
  * 
- * Making an aquarium simulation.
+ * Making an ant hill simulation.
  */
 
 "use strict";
 
-let school = [];
-let schoolSize = 4;
+let group = [];
+let groupSize = 100;
 
 function setup() {
     createCanvas(600, 600);
 
-    for (let i = 0; i < schoolSize; i++) {
-        // Create a fish
-        let fish = createFish(random(0, width), random(0, height));
-        // Add the fish to our array
-        school.push(fish);
+    for (let i = 0; i < groupSize; i++) {
+        // Create an ant
+        let ant = createAnt(random(0, width), random(0, height));
+        // Add the ant to our array
+        group.push(ant);
     }
 }
 
-// createFish(x,y)
-// Creates a new JavaScript Object describing a fish and returns it
-function createFish(x, y) {
-    let fish = {
+// Creates a new JavaScript Object describing a ant and returns it
+function createAnt(x, y) {
+    let ant = {
         x: x,
         y: y,
-        size: 50,
+        size: 5,
         vx: 0,
         vy: 0,
         speed: 2
     };
-    return fish;
+    return ant;
 }
 
-// draw()
-// Moves and displays our fish
+// Moves and displays our ant
 function draw() {
-    background(0);
+    background(200);
 
-    for (let i = 0; i < school.length; i++) {
-        moveFish(school[i]);
-        displayFish(school[i]);
+    for (let i = 0; i < group.length; i++) {
+        moveAnt(group[i]);
+        displayAnt(group[i]);
     }
 }
 
-// moveFish(fish)
-// Chooses whether the provided fish changes direction and moves it
-function moveFish(fish) {
+// Chooses whether the provided ant changes direction and moves it
+function moveAnt(ant) {
     // Choose whether to change direction
     let change = random(0, 1);
     if (change < 0.05) {
-        fish.vx = random(-fish.speed, fish.speed);
-        fish.vy = random(-fish.speed, fish.speed);
+        ant.vx = random(-ant.speed, ant.speed);
+        ant.vy = random(-ant.speed, ant.speed);
     }
 
-    // Move the fish
-    fish.x = fish.x + fish.vx;
-    fish.y = fish.y + fish.vy;
+    // Move the ant
+    ant.x = ant.x + ant.vx;
+    ant.y = ant.y + ant.vy;
 
-    // Constrain the fish to the canvas
-    fish.x = constrain(fish.x, 0, width);
-    fish.y = constrain(fish.y, 0, height);
+    // Constrain the ant to the canvas
+    ant.x = constrain(ant.x, 0, width);
+    ant.y = constrain(ant.y, 0, height);
 }
 
-// displayFish(fish)
-// Displays the provided fish on the canvas
-function displayFish(fish) {
+// Displays the provided ant on the canvas
+function displayAnt(ant) {
     push();
-    fill(200, 100, 100);
+    fill(0);
     noStroke();
-    ellipse(fish.x, fish.y, fish.size);
+    ellipse(ant.x, ant.y, ant.size);
     pop();
 }
 
 function mousePressed() {
-    let fish = createFish(mouseX, mouseY); // Create a fish at the mouse position
-    school.push(fish); // Add the fish to our array
-    // Now the school array has our new fish and it will be moved and drawn
-    // with all the others in the for loop!
+    // Create a ant at the mouse position
+    let ant = createAnt(mouseX, mouseY); 
+    // Add the ant to our array
+    group.push(ant);
 }
