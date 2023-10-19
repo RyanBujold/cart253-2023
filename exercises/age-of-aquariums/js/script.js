@@ -12,19 +12,24 @@ let canvasHeight = 800;
 let group = [];
 let startGroupSize = 5;
 let foods = [];
-let home = {
+let queenAnt = {
     x: 200,
     y: canvasHeight - 200,
     size: 10,
+    speed: 0.5,
 }
 let newAntAmount = 0;
+let foodTimer = {
+    limit: 60,
+    count: 0,
+}
 
 function setup() {
     createCanvas(canvasWidth, canvasHeight);
 
     for (let i = 0; i < startGroupSize; i++) {
         // Create an ant
-        let ant = createAnt(home.x, home.y);
+        let ant = createAnt(queenAnt.x, queenAnt.y);
         // Add the ant to our array
         group.push(ant);
     }
@@ -66,11 +71,12 @@ function createFood(x, y) {
 function draw() {
     background(200);
 
-    // Display home
+    // Update  home
+    userArrowControls();
     push();
     fill(100);
     noStroke();
-    ellipse(home.x, home.y, home.size);
+    ellipse(queenAnt.x, queenAnt.y, queenAnt.size);
     pop();
 
     // Update the foods
@@ -86,23 +92,31 @@ function draw() {
     }
 
     // Add new ants then reset the counter
-    for(let i = 0; i < newAntAmount; i++){
-        let ant = createAnt(home.x, home.y);
+    for (let i = 0; i < newAntAmount; i++) {
+        let ant = createAnt(queenAnt.x, queenAnt.y);
         group.push(ant);
     }
     newAntAmount = 0;
+
+    // Add new foods overtime
+    if (foodTimer.count >= foodTimer.limit) {
+        let food = createFood(random(0,canvasWidth), random(0,canvasHeight));
+        foods.push(food);
+        foodTimer.count = 0;
+    }
+    foodTimer.count ++;
 }
 
 // Checks if the food was brought by the ant back home
-function foodBroughtHome(ant){
+function foodBroughtHome(ant) {
     // Check if the ant is close to home
-    if(dist(ant.x, ant.y, home.x, home.y) < 10 && ant.hasFood){
+    if (dist(ant.x, ant.y, queenAnt.x, queenAnt.y) < queenAnt.size && ant.hasFood) {
         // Drop off the food
         let index = foods.indexOf(ant.food);
-        foods.splice(index,1);
+        foods.splice(index, 1);
         ant.hasFood = false;
         // Add a new ant
-        newAntAmount ++;
+        newAntAmount++;
     }
 }
 
@@ -115,7 +129,7 @@ function moveAnt(ant) {
         ant.vy = random(-ant.speed, ant.speed);
     }
     // Randomly move towards nearby food
-    if (change > 0.95) {
+    if (change > 0.90) {
         let pos = {
             x: 0,
             y: 0,
@@ -124,7 +138,7 @@ function moveAnt(ant) {
             // If there is nearby, unpicked up food, go towards it
             if (foods.length > 0 && dist(ant.x, ant.y, foods[f].x, foods[f].y) < ant.smell && !foods[f].isPickedUp && !ant.hasFood) {
                 // Check if the ant has picked up food
-                if (dist(ant.x, ant.y, foods[f].x, foods[f].y) < home.size) {
+                if (dist(ant.x, ant.y, foods[f].x, foods[f].y) < foods[f].size + 10) {
                     foods[f].isPickedUp = true;
                     ant.hasFood = true;
                     ant.food = foods[f];
@@ -135,8 +149,8 @@ function moveAnt(ant) {
             }
             // If the food is picked up by the ant, move towards home
             else if (ant.hasFood && ant.food === foods[f] && foods[f].isPickedUp) {
-                pos.x = home.x;
-                pos.y = home.y;
+                pos.x = queenAnt.x;
+                pos.y = queenAnt.y;
             }
         }
 
@@ -191,9 +205,21 @@ function displayFood(food) {
     pop();
 }
 
-function mousePressed() {
-    // When the mouse is clicked, create a food object
-    let food = createFood(mouseX, mouseY);
-    // Add the food to the foods array
-    foods.push(food);
+// Allow the user to control with the arrow keys
+function userArrowControls() {
+    if (keyIsDown(LEFT_ARROW)) {
+        queenAnt.x -= queenAnt.speed;
+    }
+
+    if (keyIsDown(RIGHT_ARROW)) {
+        queenAnt.x += queenAnt.speed;
+    }
+
+    if (keyIsDown(UP_ARROW)) {
+        queenAnt.y -= queenAnt.speed;
+    }
+
+    if (keyIsDown(DOWN_ARROW)) {
+        queenAnt.y += queenAnt.speed;
+    }
 }
