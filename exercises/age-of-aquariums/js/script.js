@@ -6,17 +6,25 @@
  */
 
 "use strict";
+let canvasWidth = 1000;
+let canvasHeight = 800;
 
 let group = [];
-let groupSize = 100;
+let startGroupSize = 5;
 let foods = [];
+let home = {
+    x: 200,
+    y: canvasHeight - 200,
+    size: 10,
+}
+let newAntAmount = 0;
 
 function setup() {
-    createCanvas(1000, 800);
+    createCanvas(canvasWidth, canvasHeight);
 
-    for (let i = 0; i < groupSize; i++) {
+    for (let i = 0; i < startGroupSize; i++) {
         // Create an ant
-        let ant = createAnt(random(0, width), random(0, height));
+        let ant = createAnt(home.x, home.y);
         // Add the ant to our array
         group.push(ant);
     }
@@ -31,7 +39,7 @@ function createAnt(x, y) {
         vx: 0,
         vy: 0,
         speed: 2,
-        smell: 100,
+        smell: 150,
         hasFood: false,
         food: {},
     };
@@ -47,8 +55,9 @@ function createFood(x, y) {
         fill: {
             r: random(0, 255),
             g: random(0, 255),
-            b: random(0, 255)
-        }
+            b: random(0, 255),
+        },
+        isPickedUp: false,
     }
     return food;
 }
@@ -56,6 +65,13 @@ function createFood(x, y) {
 // Moves and displays our ant
 function draw() {
     background(200);
+
+    // Display home
+    push();
+    fill(100);
+    noStroke();
+    ellipse(home.x, home.y, home.size);
+    pop();
 
     // Update the foods
     for (let i = 0; i < foods.length; i++) {
@@ -66,17 +82,32 @@ function draw() {
     for (let i = 0; i < group.length; i++) {
         moveAnt(group[i]);
         displayAnt(group[i]);
+        foodBroughtHome(group[i]);
+    }
+
+    // Add new ants then reset the counter
+    for(let i = 0; i < newAntAmount; i++){
+        let ant = createAnt(home.x, home.y);
+        group.push(ant);
+    }
+    newAntAmount = 0;
+}
+
+// Checks if the food was brought by the ant back home
+function foodBroughtHome(ant){
+    // Check if the ant is close to home
+    if(dist(ant.x, ant.y, home.x, home.y) < 10 && ant.hasFood){
+        // Drop off the food
+        let index = foods.indexOf(ant.food);
+        foods.splice(index,1);
+        ant.hasFood = false;
+        // Add a new ant
+        newAntAmount ++;
     }
 }
 
 // Chooses whether the provided ant changes direction and moves it
 function moveAnt(ant) {
-    // Check if the ant has picked up food
-    if (foods.length > 0 && dist(ant.x, ant.y, foods[0].x, foods[0].y) < 5) {
-        ant.hasFood = true;
-        ant.food = foods[0];
-    }
-
     // Choose whether to change direction
     let change = random(0, 1);
     if (change < 0.05) {
@@ -84,33 +115,46 @@ function moveAnt(ant) {
         ant.vy = random(-ant.speed, ant.speed);
     }
     // Randomly move towards nearby food
-    if (change > 0.95 && foods.length > 0 &&
-        dist(ant.x, ant.y, foods[0].x, foods[0].y) < ant.smell) {
+    if (change > 0.95) {
         let pos = {
             x: 0,
             y: 0,
         };
-        if (!ant.hasFood) {
-            pos.x = foods[0].x;
-            pos.y = foods[0].y;
-        }
-        else {
-            pos.x = 0;
-            pos.y = 0;
+        for (let f = 0; f < foods.length; f++) {
+            // If there is nearby, unpicked up food, go towards it
+            if (foods.length > 0 && dist(ant.x, ant.y, foods[f].x, foods[f].y) < ant.smell && !foods[f].isPickedUp && !ant.hasFood) {
+                // Check if the ant has picked up food
+                if (dist(ant.x, ant.y, foods[f].x, foods[f].y) < home.size) {
+                    foods[f].isPickedUp = true;
+                    ant.hasFood = true;
+                    ant.food = foods[f];
+                } else {
+                    pos.x = foods[f].x;
+                    pos.y = foods[f].y;
+                }
+            }
+            // If the food is picked up by the ant, move towards home
+            else if (ant.hasFood && ant.food === foods[f] && foods[f].isPickedUp) {
+                pos.x = home.x;
+                pos.y = home.y;
+            }
         }
 
-        // Move towards the desired location
-        if (ant.x < pos.x) {
-            ant.vx = random(0, ant.speed);
-        }
-        else {
-            ant.vx = random(-ant.speed, 0);
-        }
-        if (ant.y < pos.y) {
-            ant.vy = random(0, ant.speed);
-        }
-        else {
-            ant.vy = random(-ant.speed, 0);
+        // If we are given a position then...
+        if (pos.x != 0 || pos.y != 0) {
+            // Move towards the desired location
+            if (ant.x < pos.x) {
+                ant.vx = random(0, ant.speed);
+            }
+            else {
+                ant.vx = random(-ant.speed, 0);
+            }
+            if (ant.y < pos.y) {
+                ant.vy = random(0, ant.speed);
+            }
+            else {
+                ant.vy = random(-ant.speed, 0);
+            }
         }
     }
 
