@@ -183,11 +183,15 @@ function simulationState() {
 }
 
 function winState() {
-    background(0);
+    background(33, 120, 4);
+    textSize(32);
+    text('The ants have succeeded!', 10, 30);
 }
 
 function loseState() {
-    background(255);
+    background(117, 25, 7);
+    textSize(32);
+    text('The spiders have won...', 10, 30);
 }
 
 // Checks if the food was brought by the ant queen
@@ -200,6 +204,9 @@ function feedQueen(ant) {
         ant.hasFood = false;
         // Add a new ant
         newAntAmount++;
+        // Make the queen grow in size and slow down
+        queenAnt.size++;
+        queenAnt.speed-=0.005;
     }
 }
 
@@ -219,7 +226,9 @@ function attackAnts(spider) {
 
 // Check if the spider is close enought to attack the queen
 function attackQueen(spider) {
-
+    if(dist(spider.x, spider.y, queenAnt.x, queenAnt.y) < spider.size + queenAnt.size){
+        state = "lose";
+    }
 }
 
 // Chooses whether the provided ant changes direction and moves it
@@ -357,7 +366,7 @@ function moveSpider(spider) {
     }
 
     // Move the spider in the direction it is facing
-    if (spider.rotation == 0 || spider.rotation == -360 || spider.rotation == 360) {
+    if (spider.rotation == -360 || spider.rotation == 360) {
         spider.y -= spider.speed;
     }
     else if (spider.rotation == 90 || spider.rotation == -270) {
