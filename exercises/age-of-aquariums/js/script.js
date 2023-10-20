@@ -3,15 +3,23 @@
  * Ryan Bujold
  * 
  * Making an ant hill simulation.
+ * Spider image is from:
+ * https://www.svgheart.com/product/spider-silhouette-halloween-svg-file-3/ 
  */
 
 "use strict";
 let canvasWidth = 1000;
 let canvasHeight = 800;
 
-let group = [];
+let ants = [];
 let startGroupSize = 5;
 let foods = [];
+let spiders = [];
+let spiderImg;
+let spiderTimer = {
+    limit: 600,
+    count: 0,
+}
 let queenAnt = {
     x: 200,
     y: canvasHeight - 200,
@@ -20,10 +28,17 @@ let queenAnt = {
 }
 let newAntAmount = 0;
 let foodTimer = {
-    limit: 60,
+    limit: 300,
     count: 0,
 }
+let state = "simulation";
 
+// Load files
+function preload() {
+    spiderImg = loadImage('assets/images/spider.png');
+}
+
+// Setup objects and the canvas
 function setup() {
     createCanvas(canvasWidth, canvasHeight);
 
@@ -31,7 +46,7 @@ function setup() {
         // Create an ant
         let ant = createAnt(queenAnt.x, queenAnt.y);
         // Add the ant to our array
-        group.push(ant);
+        ants.push(ant);
     }
 }
 
@@ -67,17 +82,40 @@ function createFood(x, y) {
     return food;
 }
 
+// Creates a new JavaScript Object describing a spider object and returns it
+function createSpider(x, y) {
+    let spider = {
+        x: x,
+        y: y,
+        rotation: 0,
+        size: 100,
+        speed: 2,
+        health: 5,
+    }
+    return spider;
+}
+
 // Moves and displays our ant
 function draw() {
     background(200);
 
-    // Update  home
-    userArrowControls();
-    push();
-    fill(100);
-    noStroke();
-    ellipse(queenAnt.x, queenAnt.y, queenAnt.size);
-    pop();
+    switch (state) {
+        case "simulation":
+            simulationState();
+            break;
+        case "win":
+            winState();
+            break;
+        case "lose":
+            loseState();
+            break;
+    }
+}
+
+function simulationState() {
+    // Update queen ant
+    moveQueenAnt();
+    displayQueenAnt();
 
     // Update the foods
     for (let i = 0; i < foods.length; i++) {
@@ -85,31 +123,53 @@ function draw() {
     }
 
     // Update the ants
-    for (let i = 0; i < group.length; i++) {
-        moveAnt(group[i]);
-        displayAnt(group[i]);
-        foodBroughtHome(group[i]);
+    for (let i = 0; i < ants.length; i++) {
+        moveAnt(ants[i]);
+        displayAnt(ants[i]);
+        feedQueen(ants[i]);
+    }
+
+    // Update the spiders
+    for (let i = 0; i < spiders.length; i++){
+        moveSpider(spiders[i]);
+        displaySpider(spiders[i]);
     }
 
     // Add new ants then reset the counter
     for (let i = 0; i < newAntAmount; i++) {
         let ant = createAnt(queenAnt.x, queenAnt.y);
-        group.push(ant);
+        ants.push(ant);
     }
     newAntAmount = 0;
 
     // Add new foods overtime
     if (foodTimer.count >= foodTimer.limit) {
-        let food = createFood(random(0,canvasWidth), random(0,canvasHeight));
+        let food = createFood(random(0, canvasWidth), random(0, canvasHeight));
         foods.push(food);
         foodTimer.count = 0;
     }
-    foodTimer.count ++;
+    foodTimer.count++;
+
+    // Add new spiders overtime
+    if (spiderTimer.count >= spiderTimer.limit){
+        let spider = createSpider(canvasWidth, 0);
+        spiders.push(spider);
+        spiderTimer.count = 0;
+    }
+    spiderTimer.count++;
 }
 
-// Checks if the food was brought by the ant back home
-function foodBroughtHome(ant) {
-    // Check if the ant is close to home
+function winState() {
+
+}
+
+function loseState() {
+
+}
+
+// Checks if the food was brought by the ant queen
+function feedQueen(ant) {
+    // Check if the ant is close to queen ant
     if (dist(ant.x, ant.y, queenAnt.x, queenAnt.y) < queenAnt.size && ant.hasFood) {
         // Drop off the food
         let index = foods.indexOf(ant.food);
@@ -147,7 +207,7 @@ function moveAnt(ant) {
                     pos.y = foods[f].y;
                 }
             }
-            // If the food is picked up by the ant, move towards home
+            // If the food is picked up by the ant, move towards the queen ant
             else if (ant.hasFood && ant.food === foods[f] && foods[f].isPickedUp) {
                 pos.x = queenAnt.x;
                 pos.y = queenAnt.y;
@@ -205,8 +265,17 @@ function displayFood(food) {
     pop();
 }
 
+// Displays the provided queen ant on the canvas
+function displayQueenAnt() {
+    push();
+    fill(100);
+    noStroke();
+    ellipse(queenAnt.x, queenAnt.y, queenAnt.size);
+    pop();
+}
+
 // Allow the user to control with the arrow keys
-function userArrowControls() {
+function moveQueenAnt() {
     if (keyIsDown(LEFT_ARROW)) {
         queenAnt.x -= queenAnt.speed;
     }
@@ -222,4 +291,46 @@ function userArrowControls() {
     if (keyIsDown(DOWN_ARROW)) {
         queenAnt.y += queenAnt.speed;
     }
+}
+
+// Move the given spider 
+function moveSpider(spider){
+    // Randomly rotate the spider's direction
+    let change = random(0,1);
+    if(change < 0.01 && spider.rotation < 360){
+        spider.rotation += 90;
+    }
+    else if(change > 0.99 && spider.rotation > 0){
+        spider.rotation -= 90;
+    }
+
+    // Move the spider in the direction it is facing
+    if(spider.rotation == 90){
+        spider.x += spider.speed;
+    }
+    else if(spider.rotation == 180){
+        spider.y += spider.speed;
+    }
+    else if(spider.rotation == 270){
+        spider.x -= spider.speed;
+    }
+    else if(spider.rotation == 360){
+        spider.y -= spider.speed;
+    }
+
+    // Constrain the spider to the canvas
+    spider.x = constrain(spider.x, 0, width);
+    spider.y = constrain(spider.y, 0, height);
+    
+}
+
+// Displays the provided spider on the canvas
+function displaySpider(spider){
+    push();
+    imageMode(CENTER);
+    angleMode(DEGREES);
+    translate(spider.x, spider.y);
+    rotate(spider.rotation);
+    image(spiderImg, 0, 0, spider.size, spider.size);
+    pop();
 }
