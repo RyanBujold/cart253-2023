@@ -15,6 +15,7 @@ let ants = [];
 let startGroupSize = 5;
 let foods = [];
 let spiders = [];
+let deadSpiders = [];
 let spiderImg;
 let spiderTimer = {
     limit: 600,
@@ -28,9 +29,10 @@ let queenAnt = {
 }
 let newAntAmount = 0;
 let foodTimer = {
-    limit: 300,
+    limit: 180,
     count: 0,
 }
+let winAmount = 30;
 let state = "simulation";
 
 // Load files
@@ -88,9 +90,9 @@ function createSpider(x, y) {
         x: x,
         y: y,
         rotation: 0,
-        size: 100,
-        speed: 2,
-        health: 5,
+        size: random(50, 150),
+        speed: random(1, 1.5),
+        health: Math.round(random(1,3)),
     }
     return spider;
 }
@@ -130,9 +132,15 @@ function simulationState() {
     }
 
     // Update the spiders
-    for (let i = 0; i < spiders.length; i++){
+    for (let i = 0; i < spiders.length; i++) {
         moveSpider(spiders[i]);
         displaySpider(spiders[i]);
+        attackAnts(spiders[i]);
+        attackQueen(spiders[i]);
+        // If the spider runs out of health, remove it
+        if (spiders[i].health <= 0) {
+            deadSpiders.push(i);
+        }
     }
 
     // Add new ants then reset the counter
@@ -151,20 +159,35 @@ function simulationState() {
     foodTimer.count++;
 
     // Add new spiders overtime
-    if (spiderTimer.count >= spiderTimer.limit){
-        let spider = createSpider(canvasWidth, 0);
+    if (spiderTimer.count >= spiderTimer.limit) {
+        let spider = createSpider(random(0, canvasWidth), 0);
         spiders.push(spider);
         spiderTimer.count = 0;
     }
     spiderTimer.count++;
+
+    // Get rid of any dead spiders
+    for (let s = 0; s < deadSpiders.length; s++) {
+        spiders.splice(deadSpiders[s], 1);
+    }
+    // Make sure to reset the list of dead spiders or else it will create problems
+    deadSpiders = [];
+
+    // If we reach the winning amount of ants, we win
+    if (ants.length >= winAmount) {
+        state = "win";
+    }
+    else if(ants.length <= 0){
+        state = "lose";
+    }
 }
 
 function winState() {
-
+    background(0);
 }
 
 function loseState() {
-
+    background(255);
 }
 
 // Checks if the food was brought by the ant queen
@@ -178,6 +201,25 @@ function feedQueen(ant) {
         // Add a new ant
         newAntAmount++;
     }
+}
+
+// Check if the spider is close enought to attack an ant
+function attackAnts(spider) {
+    for (let i = 0; i < ants.length; i++) {
+        if (dist(ants[i].x, ants[i].y, spider.x, spider.y) < ants[i].size + spider.size) {
+            // Remove the ant
+            ants[i].food.isPickedUp = false;
+            let index = ants.indexOf(ants[i]);
+            ants.splice(index, 1);
+            // Reduce the spider's health
+            spider.health--;
+        }
+    }
+}
+
+// Check if the spider is close enought to attack the queen
+function attackQueen(spider) {
+
 }
 
 // Chooses whether the provided ant changes direction and moves it
@@ -212,6 +254,12 @@ function moveAnt(ant) {
                 pos.x = queenAnt.x;
                 pos.y = queenAnt.y;
             }
+        }
+
+        // If the user presses the mouse, have the ants move towards that location
+        if (mouseIsPressed === true) {
+            pos.x = mouseX;
+            pos.y = mouseY;
         }
 
         // If we are given a position then...
@@ -291,41 +339,45 @@ function moveQueenAnt() {
     if (keyIsDown(DOWN_ARROW)) {
         queenAnt.y += queenAnt.speed;
     }
+
+    // Constrain the queen ant to the canvas
+    queenAnt.x = constrain(queenAnt.x, 0, width);
+    queenAnt.y = constrain(queenAnt.y, 0, height);
 }
 
 // Move the given spider 
-function moveSpider(spider){
+function moveSpider(spider) {
     // Randomly rotate the spider's direction
-    let change = random(0,1);
-    if(change < 0.01 && spider.rotation < 360){
+    let change = random(0, 1);
+    if (change < 0.01 && spider.rotation < 360) {
         spider.rotation += 90;
     }
-    else if(change > 0.99 && spider.rotation > 0){
+    else if (change > 0.99 && spider.rotation > -360) {
         spider.rotation -= 90;
     }
 
     // Move the spider in the direction it is facing
-    if(spider.rotation == 90){
+    if (spider.rotation == 0 || spider.rotation == -360 || spider.rotation == 360) {
+        spider.y -= spider.speed;
+    }
+    else if (spider.rotation == 90 || spider.rotation == -270) {
         spider.x += spider.speed;
     }
-    else if(spider.rotation == 180){
+    else if (spider.rotation == 180 || spider.rotation == -180) {
         spider.y += spider.speed;
     }
-    else if(spider.rotation == 270){
+    else if (spider.rotation == 270 || spider.rotation == -90) {
         spider.x -= spider.speed;
-    }
-    else if(spider.rotation == 360){
-        spider.y -= spider.speed;
     }
 
     // Constrain the spider to the canvas
     spider.x = constrain(spider.x, 0, width);
     spider.y = constrain(spider.y, 0, height);
-    
+
 }
 
 // Displays the provided spider on the canvas
-function displaySpider(spider){
+function displaySpider(spider) {
     push();
     imageMode(CENTER);
     angleMode(DEGREES);
