@@ -10,6 +10,8 @@ class Paddle {
         // Position
         this.x = 0;
         this.y = height;
+        // Shape
+        this.circle = false;
     }
 
     move() {
@@ -22,7 +24,12 @@ class Paddle {
         fill(0, 255, 0);
         stroke(0);
         rectMode(CENTER);
-        rect(this.x, this.y, this.width, this.height);
+        if (this.circle == true) {
+            ellipse(this.x, this.y, this.width, this.height);
+        }
+        else {
+            rect(this.x, this.y, this.width, this.height);
+        }
         pop();
     }
 }
