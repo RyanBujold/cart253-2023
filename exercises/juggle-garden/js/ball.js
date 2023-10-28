@@ -59,10 +59,12 @@ class Ball {
     }
 
     bounce(paddle) {
+        let didBounce = false;
         if (paddle.circle == false) {
             // If the paddle is flat, bounce the ball up if it hits the paddle
             if (this.x > paddle.x - paddle.width / 2 && this.x < paddle.x + paddle.width / 2 && this.y + this.size / 2 >= paddle.y - paddle.height / 2 && this.y + this.size / 2 < paddle.y + paddle.height) {
                 this.bounceBall();
+                didBounce = true;
             }
         }
         else {
@@ -73,6 +75,7 @@ class Ball {
                 this.maxSpeed = 20;
                 this.size = 25;
                 this.bounceBall();
+                didBounce = true;
             }
             // Right side
             else if (this.x < paddle.x + paddle.width / 2 && this.x > paddle.x && this.y + this.size / 2 >= paddle.y - paddle.height / 2 && this.y + this.size / 2 < paddle.y + paddle.height) {
@@ -80,8 +83,10 @@ class Ball {
                 this.maxSpeed = 20;
                 this.size = 25;
                 this.bounceBall();
+                didBounce = true;
             }
         }
+        return didBounce;
     }
 
     bounceBall() {

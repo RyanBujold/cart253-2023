@@ -21,16 +21,21 @@ let defeatCounter = {
     count: 0
 }
 let victoryCounter = {
-    limit: 50,
+    limit: 100,
     count: 0
 }
-let state = "main";
+let powerUpSFX;
+let bounceSFX;
+let defeatSFX;
+let state = "title";
 
 /**
  * Load neccessary files
 */
 function preload() {
-
+    powerUpSFX = loadSound(`assets/sounds/powerUp.wav`);
+    bounceSFX = loadSound(`assets/sounds/bounce.wav`);
+    defeatSFX = loadSound(`assets/sounds/defeat.wav`);
 }
 
 /**
@@ -56,6 +61,9 @@ function draw() {
     background(150);
 
     switch (state) {
+        case "title":
+            titleState();
+            break;
         case "main":
             mainState();
             break;
@@ -80,7 +88,10 @@ function mainState() {
         if (balls[i].active) {
             balls[i].gravity(gravityForce)
             balls[i].move();
-            balls[i].bounce(paddle);
+            if(balls[i].bounce(paddle)){
+                // If the ball bounces, play a sound
+                bounceSFX.play();
+            }
             balls[i].display();
             // If the ball is close to an enemy, destroy them
             for (let j = 0; j < enemies.length; j++) {
@@ -88,6 +99,7 @@ function mainState() {
                     enemies.splice(j, 1);
                     defeatCounter.count++;
                     victoryCounter.count++;
+                    defeatSFX.play();
                 }
             }
         }
@@ -117,6 +129,7 @@ function mainState() {
         let ball = new Ball(width / 2, 0);
         balls.push(ball);
         defeatCounter.count = 0;
+        powerUpSFX.play();
     }
 
     // Check victory
@@ -139,7 +152,19 @@ function loseState() {
     text('YOU LOSE', windowWidth / 4, windowHeight / 2);
 }
 
+function titleState(){
+    background(150);
+    textSize(40);
+    text('Defeat the invaders!', windowWidth / 4, windowHeight / 2);
+    text('Click to start', windowWidth / 4, windowHeight / 2 + 40);
+}
+
 // Toggle the paddle's shape
 function mousePressed() {
-    paddle.circle = !paddle.circle;
+    if(state == "title"){
+        state = "main";
+    }
+    else {
+        paddle.circle = !paddle.circle;
+    }
 }
