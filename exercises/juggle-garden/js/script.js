@@ -18,8 +18,13 @@ let enemyTimer = {
 }
 let defeatCounter = {
     limit: 10,
-    count: 0,
+    count: 0
 }
+let victoryCounter = {
+    limit: 50,
+    count: 0
+}
+let state = "main";
 
 /**
  * Load neccessary files
@@ -50,7 +55,17 @@ function setup() {
 function draw() {
     background(150);
 
-    mainState();
+    switch (state) {
+        case "main":
+            mainState();
+            break;
+        case "win":
+            winState();
+            break;
+        case "lose":
+            loseState();
+            break;
+    }
 
 }
 
@@ -72,6 +87,7 @@ function mainState() {
                 if (balls[i].destroy(enemies[j])) {
                     enemies.splice(j, 1);
                     defeatCounter.count++;
+                    victoryCounter.count++;
                 }
             }
         }
@@ -81,6 +97,10 @@ function mainState() {
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].move();
         enemies[i].display();
+        // Check defeat
+        if (enemies[i].y > height) {
+            state = "lose";
+        }
     }
 
     // Create enemies
@@ -98,6 +118,25 @@ function mainState() {
         balls.push(ball);
         defeatCounter.count = 0;
     }
+
+    // Check victory
+    if (victoryCounter.count >= victoryCounter.limit) {
+        state = "win";
+    }
+}
+
+function winState() {
+    background(42, 191, 82);
+    textSize(64);
+    textFont('Georgia');
+    text('YOU WIN', windowWidth / 4, windowHeight / 2);
+}
+
+function loseState() {
+    background(150, 17, 17);
+    textSize(64);
+    textFont('Georgia');
+    text('YOU LOSE', windowWidth / 4, windowHeight / 2);
 }
 
 // Toggle the paddle's shape
