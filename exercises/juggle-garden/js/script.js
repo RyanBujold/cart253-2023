@@ -3,6 +3,8 @@
  * Ryan Bujold
  * 
  * Making a juggling simulation
+ * 
+ * powerUp, bounce and defeat SFX generated from: https://sfxr.me/
  */
 
 "use strict";
@@ -155,8 +157,9 @@ function loseState() {
 function titleState(){
     background(150);
     textSize(40);
-    text('Defeat the invaders!', windowWidth / 4, windowHeight / 2);
-    text('Click to start', windowWidth / 4, windowHeight / 2 + 40);
+    text('Defeat the invaders!', 200, windowHeight / 2);
+    text('(click the mouse for a special paddle)', 200, windowHeight / 2 + 60)
+    text('Click to start', 200, windowHeight / 2 + 120);
 }
 
 // Toggle the paddle's shape
