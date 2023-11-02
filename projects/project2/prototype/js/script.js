@@ -16,9 +16,11 @@ let user = {
     rotation: 0,
     size: 50,
     sight: {
-        range: 45,
-        distance: 500,
-    }
+        range: 30,
+        distance: 800,
+    },
+    moveSpeed: 4,
+    turnSpeed: 2,
 }
 
 let box = {
@@ -63,9 +65,18 @@ function draw() {
 function moveUser() {
     // Rotate the user right or left
     if (keyIsDown(LEFT_ARROW)) {
-        user.rotation += 1;
+        user.rotation += user.turnSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        user.rotation -= 1;
+        user.rotation -= user.turnSpeed;
+    }
+    // Move forward and backwards
+    if (keyIsDown(UP_ARROW)) {
+        user.x -= sin(user.rotation) * user.moveSpeed;
+        user.y -= cos(user.rotation) * user.moveSpeed;
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+        user.x += sin(user.rotation) * user.moveSpeed;
+        user.y += cos(user.rotation) * user.moveSpeed;
     }
 }
