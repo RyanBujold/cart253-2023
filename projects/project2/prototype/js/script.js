@@ -15,19 +15,12 @@ let user = {
     y: canvasHeight / 2,
     rotation: 0,
     size: 50,
-    sight: {
+    flashlight: {
         range: 30,
-        distance: 800,
+        distance: 1000,
     },
-    moveSpeed: 4,
-    turnSpeed: 2,
-}
-
-let box = {
-    x: 300,
-    y: 300,
-    w: 200,
-    h: 200,
+    moveSpeed: 3,
+    turnSpeed: 1.5,
 }
 
 function preload() {
@@ -44,11 +37,6 @@ function draw() {
 
     // Move the user
     moveUser();
-    // Draw the user's sight
-    fill(0, 0, 200);
-    triangle(user.x, user.y, 
-        user.x - sin(user.rotation + user.sight.range) * user.sight.distance, user.y - cos(user.rotation + user.sight.range) * user.sight.distance, 
-        user.x - sin(user.rotation - user.sight.range) * user.sight.distance, user.y - cos(user.rotation - user.sight.range) * user.sight.distance);
     // Draw the user
     fill(200, 0, 0);
     ellipse(user.x, user.y, user.size);
@@ -58,8 +46,30 @@ function draw() {
     noStroke();
 
     // Draw a box
-    fill(200);
-    rect(box.x, box.y, box.w, box.y);
+    fill(50);
+    rect(600, 100, 100, 100);
+
+    // Draw the user's sight
+    fill(255, 255, 255, 50);
+    let leftSightPoint = {
+        x: user.x - sin(user.rotation + user.flashlight.range) * user.flashlight.distance,
+        y: user.y - cos(user.rotation + user.flashlight.range) * user.flashlight.distance,
+    }
+    let rightSightPoint = {
+        x: user.x - sin(user.rotation - user.flashlight.range) * user.flashlight.distance,
+        y: user.y - cos(user.rotation - user.flashlight.range) * user.flashlight.distance,
+    }
+    triangle(user.x, user.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
+
+    // Draw a box
+    fill(0);
+    rect(300, 300, 200, 200);
+
+    // Draw circle
+    let shade = map(dist(1000, 500, user.x, user.y), 0, 500, 200, 50);
+    fill(shade);
+    ellipse(1000, 500, 50);
+
 }
 
 function moveUser() {
