@@ -45,7 +45,7 @@ function draw() {
     line(user.x, user.y, user.x - sin(user.rotation) * 50, user.y - cos(user.rotation) * 50);
     noStroke();
 
-    // Draw a box
+    // Draw a gray box 
     fill(50);
     rect(600, 100, 100, 100);
 
@@ -61,7 +61,7 @@ function draw() {
     }
     triangle(user.x, user.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
 
-    // Draw a box
+    // Draw a black box
     fill(0);
     rect(300, 300, 200, 200);
 
