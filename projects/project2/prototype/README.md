@@ -1,4 +1,4 @@
 # Prototype
 ## Ryan Bujold 
 
-TODO add prototype's description
+A prototype of a top down survival game.

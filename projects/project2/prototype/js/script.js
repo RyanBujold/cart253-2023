@@ -2,7 +2,7 @@
  * Prototype - Project 2
  * Ryan Bujold
  * 
- * TODO add a description of the project/prototype.
+ * A prototype of a top down survival shooter using a flashlight to light your way.
  */
 
 "use strict";
