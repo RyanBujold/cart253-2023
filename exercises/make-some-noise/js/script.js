@@ -35,8 +35,8 @@ function draw() {
 function createBall(x, y) {
     let synth = new p5.PolySynth();
     let index = new random(0, notes.length-1);
-    let panner = new p5.Panner3D();
     let note = notes[index];
+    let panner = new p5.Panner3D();
     let ball = new Ball(x, y, note, synth, panner);
     balls.push(ball);
 }

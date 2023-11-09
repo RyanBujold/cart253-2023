@@ -28,6 +28,7 @@ class Ball {
         // Panner
         this.panner = panner;
         this.panner.process(this.oscillator);
+        console.log(this.panner);
     }
 
     move() {
@@ -37,7 +38,7 @@ class Ball {
         let d = dist(this.x, this.y, width / 2, height / 2);
         let newFreq = map(d, 0, this.maxdistance, this.nearFreq, this.farFreq);
         this.oscillator.freq(newFreq);
-        this.panner.set(this.x, this.y, 0, 0.1);
+        this.panner.set(this.x - width/2, this.y - height/2, 0, 0.1);
     }
 
     bounce() {
