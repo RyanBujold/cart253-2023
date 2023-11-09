@@ -1,6 +1,6 @@
 class Ball {
 
-    constructor(x, y, note, synth) {
+    constructor(x, y, note, synth, panner) {
         this.x = x;
         this.y = y;
         this.size = 50;
@@ -25,6 +25,9 @@ class Ball {
         this.synthesizer = synth;
         // Distance
         this.maxdistance = dist(0, 0, width / 2, height / 2);
+        // Panner
+        this.panner = panner;
+        this.panner.process(this.oscillator);
     }
 
     move() {
@@ -34,6 +37,7 @@ class Ball {
         let d = dist(this.x, this.y, width / 2, height / 2);
         let newFreq = map(d, 0, this.maxdistance, this.nearFreq, this.farFreq);
         this.oscillator.freq(newFreq);
+        this.panner.set(this.x, this.y, 0, 0.1);
     }
 
     bounce() {
