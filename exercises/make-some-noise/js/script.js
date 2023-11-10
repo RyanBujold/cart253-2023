@@ -3,16 +3,17 @@
  * Ryan Bujold
  * 
  * Using the p5 sound library to experiment with 
- * sound for the final project.
+ * sound for the final project. This simulation 
+ * emulates footsteps in a 3d sound space.
  */
 
 "use strict";
 
-let balls = [];
-let notes = ['F3', 'G3', 'Ab4', 'Bb4', 'C4', 'Db4', 'Eb4', 'F4'];
+let footsteps = [];
+let footstepSFX;
 
 function preload() {
-
+    footstepSFX = loadSound(`assets/sounds/footsteps.wav`);
 }
 
 function setup() {
@@ -24,23 +25,19 @@ function setup() {
 function draw() {
     background(0);
 
-    for (let i = 0; i < balls.length; i++) {
-        balls[i].move();
-        balls[i].bounce();
-        balls[i].display();
+    for (let i = 0; i < footsteps.length; i++) {
+        footsteps[i].move();
+        footsteps[i].bounce();
+        footsteps[i].display();
     }
-
 }
 
-function createBall(x, y) {
-    let synth = new p5.PolySynth();
-    let index = new random(0, notes.length-1);
-    let note = notes[index];
+function createFootstep(x, y) {
     let panner = new p5.Panner3D();
-    let ball = new Ball(x, y, note, synth, panner);
-    balls.push(ball);
+    let ball = new Footstep(x, y, panner, footstepSFX);
+    footsteps.push(ball);
 }
 
 function mousePressed() {
-    createBall(mouseX, mouseY);
+    createFootstep(mouseX, mouseY);
 }
