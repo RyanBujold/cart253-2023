@@ -19,8 +19,8 @@ function preload() {
 function setup() {
     userStartAudio();
 
+    // Place our listener at the center of the canvas
     getAudioContext().listener.setPosition(width/2,height/2,0);
-    console.log(getAudioContext());
 
     createCanvas(600, 600);
 }

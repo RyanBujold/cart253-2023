@@ -26,6 +26,7 @@ class Footstep {
             limit: 40,
             count: 0,
         }
+        // Storing draw locations
         this.drawX = this.x;
         this.drawY = this.y;
         this.drawR = this.rotation;
@@ -46,7 +47,7 @@ class Footstep {
             this.rotation -= 90;
         }
 
-        // Set the direction of where the sound is comming from based on our current position
+        // Set the position of where the sound is comming from to our footstep
         this.panner.set(this.x - width / 2, this.y - height / 2, 0, 0.1);
         
         // Update our timer
