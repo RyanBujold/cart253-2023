@@ -8,6 +8,7 @@ class Footstep {
             r: random(0, 255),
             g: random(0, 255),
             b: random(0, 255),
+            a: 100,
         }
         this.speed = 3;
         this.velocity = {
@@ -22,9 +23,12 @@ class Footstep {
         this.sound.loop();
         // Timer
         this.timer = {
-            limit: 60,
+            limit: 40,
             count: 0,
         }
+        this.drawX = this.x;
+        this.drawY = this.y;
+        this.drawR = this.rotation;
     }
 
     move() {
@@ -44,28 +48,36 @@ class Footstep {
 
         // Set the direction of where the sound is comming from based on our current position
         this.panner.set(this.x - width / 2, this.y - height / 2, 0, 0.1);
+        
+        // Update our timer
+        this.timer.count ++;
+        if(this.timer.count > this.timer.limit){
+            this.timer.count = 0;
+            this.drawX = this.x;
+            this.drawY = this.y;
+            this.drawR = this.rotation;
+        }
     }
 
     bounce() {
         if (this.x - this.size / 2 < 0 || this.x + this.size / 2 > width) {
             this.velocity.x = -this.velocity.x;
-            console.log(this.rotation);
         }
         if (this.y - this.size / 2 < 0 || this.y + this.size / 2 > height) {
             this.velocity.y = -this.velocity.y;
-            console.log(this.rotation);
         }
 
     }
 
     display() {
         // Draw a footstep
+        this.fill.a = map(this.timer.count, 0, this.timer.limit, 255, 0);
         push();
         noStroke();
-        fill(this.fill.r, this.fill.g, this.fill.b);
+        fill(this.fill.r, this.fill.g, this.fill.b, this.fill.a);
         angleMode(DEGREES);
-        translate(this.x, this.y);
-        rotate(this.rotation);
+        translate(this.drawX, this.drawY);
+        rotate(this.drawR);
         ellipse(0, 0, 30, 60);
         rect(-10, 35, 20, 20)
         pop();
