@@ -3,6 +3,8 @@
  * Ryan Bujold
  * 
  * A prototype of a top down survival shooter using a flashlight to light your way.
+ * 
+ * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
  */
 
 "use strict";
@@ -23,10 +25,11 @@ function setup() {
 
     // Initialize the user
     user = new User(canvasWidth / 2, canvasHeight / 2);
+    //user = new User(0,0);
 }
 
 function draw() {
-    background(0);
+    background(200);
 
     // Move the user
     user.move();
@@ -50,4 +53,16 @@ function draw() {
     fill(shade);
     ellipse(1000, 500, 50);
 
+    // Draw the box's shadow
+    let cx = 500;
+    let cy = 300;
+    let hoff = 100;
+    let hx = map(user.x, cx-canvasWidth, cx+canvasWidth, -hoff, hoff);
+    let hy = map(user.y, cy-canvasHeight, cy+canvasHeight, -hoff, hoff);
+    let shadow = 100;
+    let sx = hx*-shadow;
+    let sy = hy*-shadow;
+    stroke(0, 0, 255);
+    line(500, 300, cx+sx, cy+sy);
+    noStroke();
 }
