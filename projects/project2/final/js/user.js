@@ -3,19 +3,41 @@ class User {
      * A user class that is controlled with arrow keys and uses a flashlight.
      * @param {*} x starting horizontal point on the canvas.
      * @param {*} y starting vertical point on the canvas.
+     * @param {*} walls the walls of the current map.
      */
 
-    constructor(x, y) {
+    constructor(x, y, walls) {
         this.x = x;
         this.y = y;
         this.rotation = 0;
         this.size = 50;
+        this.w = this.size/2;
+        this.h = this.size/2;
         this.flashlight = {
             range: 30,
             distance: 500,
         };
         this.moveSpeed = 3;
         this.turnSpeed = 1.5;
+        // Make a square collider for the user
+        this.collisionBox = {
+            l: this.x - this.w, //left
+            r: this.x + this.w, //right
+            t: this.y - this.h, //top
+            b: this.y + this.h, //bottom
+        }
+        this.walls = walls;
+    }
+
+    update(){
+        // Update our collider box
+        this.collisionBox = {
+            l: this.x - this.w,
+            r: this.x + this.w,
+            t: this.y - this.h,
+            b: this.y + this.h, 
+        }
+        this.move();
     }
 
     move() {
@@ -31,10 +53,11 @@ class User {
             this.x -= sin(this.rotation) * this.moveSpeed;
             this.y -= cos(this.rotation) * this.moveSpeed;
         }
-        if (keyIsDown(DOWN_ARROW)) {
+        else if (keyIsDown(DOWN_ARROW)) {
             this.x += sin(this.rotation) * this.moveSpeed;
             this.y += cos(this.rotation) * this.moveSpeed;
         }
+
     }
 
     display() {
@@ -42,7 +65,6 @@ class User {
         // Draw the user
         fill(200, 0, 0);
         ellipse(this.x, this.y, this.size);
-
         // Draw a pointer for the direction the user is facing
         stroke(0, 200, 0);
         line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
@@ -63,4 +85,15 @@ class User {
         }
         triangle(this.x, this.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
     }
+
+    /*
+    checkCollision(wall) {
+        let didCollide = false;
+        let box = this.collisionBox;
+        if (box.l >= wall.x && box.r <= wall.x + wall.w && box.b >= wall.y && box.t <= wall.y + wall.h) {
+            didCollide = true;
+        }
+        return didCollide;
+    }
+    */
 }

@@ -13,7 +13,10 @@ let canvasWidth = 1600
 let canvasHeight = 800;
 
 let user;
-let wall;
+let walls = [
+    new Wall(300, 300, 200, 200),
+    new Wall(1000, 200, 200, 400),
+];
 
 function preload() {
 
@@ -25,17 +28,15 @@ function setup() {
     noStroke();
 
     // Initialize objects
-    user = new User(canvasWidth / 2, canvasHeight / 2);
-    wall = new Wall(300, 300, 200, 200);
+    user = new User(canvasWidth / 2, canvasHeight / 2, walls);
+
 }
 
 function draw() {
     background(200);
 
     // Move the user
-    user.move();
-
-    // Draw the user
+    user.update();
     user.display();
 
     // Draw a gray box 
@@ -48,26 +49,12 @@ function draw() {
     // Draw circle
     let shade = map(dist(1000, 500, user.x, user.y), 0, 500, 200, 50);
     fill(shade);
-    ellipse(1000, 500, 50);
-    
-    // Draw the walls
-    wall.update(user);
-    wall.display();
+    ellipse(900, 500, 50);
 
-}
-
-function drawShadow(cx, cy) {
-    let hoff = 100;
-    let hx = map(user.x, cx - canvasWidth, cx + canvasWidth, -hoff, hoff);
-    let hy = map(user.y, cy - canvasHeight, cy + canvasHeight, -hoff, hoff);
-    let shadow = 100;
-    let sx = hx * -shadow;
-    let sy = hy * -shadow;
-    stroke(0, 0, 255);
-    line(cx, cy, cx + sx, cy + sy);
-    noStroke();
-    return {
-        x: cx + sx,
-        y: cy + sy,
+    // Update and draw the walls
+    for (let i = 0; i < walls.length; i++) {
+        walls[i].update(user);
+        walls[i].display();
     }
+
 }
