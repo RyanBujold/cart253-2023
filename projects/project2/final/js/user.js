@@ -1,4 +1,9 @@
 class User {
+    /**
+     * A user class that is controlled with arrow keys and uses a flashlight.
+     * @param {*} x starting horizontal point on the canvas.
+     * @param {*} y starting vertical point on the canvas.
+     */
 
     constructor(x, y) {
         this.x = x;

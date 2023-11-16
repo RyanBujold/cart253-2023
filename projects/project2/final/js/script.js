@@ -1,8 +1,8 @@
 /**
- * Prototype - Project 2
+ * Final Project - Dark House
  * Ryan Bujold
  * 
- * A prototype of a top down survival shooter using a flashlight to light your way.
+ * A top down survival shooter using a flashlight to light your way and survive enemies.
  * 
  * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
  */
@@ -13,6 +13,7 @@ let canvasWidth = 1600
 let canvasHeight = 800;
 
 let user;
+let wall;
 
 function preload() {
 
@@ -23,9 +24,9 @@ function setup() {
     angleMode(DEGREES);
     noStroke();
 
-    // Initialize the user
+    // Initialize objects
     user = new User(canvasWidth / 2, canvasHeight / 2);
-    //user = new User(0,0);
+    wall = new Wall(300, 300, 200, 200);
 }
 
 function draw() {
@@ -44,53 +45,14 @@ function draw() {
     // Draw the user's flashlight
     user.displayFlashlight();
 
-    // Draw a black box
-    fill(0);
-    rect(300, 300, 200, 200);
-
     // Draw circle
     let shade = map(dist(1000, 500, user.x, user.y), 0, 500, 200, 50);
     fill(shade);
     ellipse(1000, 500, 50);
-
-    // Draw the box's shadow
-    let s1 = drawShadow(300, 300);
-    let s2 = drawShadow(500, 300);
-    let s3 = drawShadow(300, 500);
-    let s4 = drawShadow(500, 500);
-
-    // Shadow top
-    fill(0,200,0);
-    beginShape();
-    vertex(300, 300);
-    vertex(s1.x, s1.y);
-    vertex(s2.x, s2.y);
-    vertex(500, 300);
-    endShape(CLOSE);
-    // Shadow left
-    fill(200,0,0);
-    beginShape();
-    vertex(300, 300);
-    vertex(s1.x, s1.y);
-    vertex(s3.x, s3.y);
-    vertex(300, 500);
-    endShape(CLOSE);
-    // Shadow right
-    fill(0,0,200);
-    beginShape();
-    vertex(300, 500);
-    vertex(s3.x, s3.y);
-    vertex(s4.x, s4.y);
-    vertex(500, 500);
-    endShape(CLOSE);
-    // Shadow bottom
-    fill(0,200,200);
-    beginShape();
-    vertex(500, 500);
-    vertex(s4.x, s4.y);
-    vertex(s2.x, s2.y);
-    vertex(500, 300);
-    endShape(CLOSE);
+    
+    // Draw the walls
+    wall.update(user);
+    wall.display();
 
 }
 

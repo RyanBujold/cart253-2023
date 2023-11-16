@@ -1,4 +1,4 @@
-# Prototype
+# Final Project - Dark House
 ## Ryan Bujold 
 
-A prototype of a top down survival game.
+A top down survival shooter using a flashlight to light your way and survive enemies.
