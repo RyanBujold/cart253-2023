@@ -14,18 +14,42 @@ let canvasHeight = 800;
 
 let user;
 let walls = [
+    // Border walls
     new Wall(0, 0, 50, canvasHeight),
     new Wall(0, 0, canvasWidth, 50),
     new Wall(canvasWidth - 50, 0, 50, canvasHeight),
     new Wall(0, canvasHeight - 50, canvasWidth, 50),
-    new Wall(50, 50, 200, 400),
-    new Wall(250, 50, 1000, 50),
-    new Wall(550, 100, 50, 100),
-    new Wall(550, 300, 50, 100),
+    // Top left room
+    new Wall(300, 50, 250, 100),
+    new Wall(300, 250, 50, 100),
+    // Left middle hallway intersection
+    new Wall(50, 350, 50, 200),
+    new Wall(200, 350, 150, 50),
+    new Wall(200, 500, 150, 50),
+    // Bottom left room
+    new Wall(350, 700, 200, 50),
+    new Wall(350, 500, 200, 100),
+    // Bottom hallway
+    new Wall(650, 500, 500, 100),
+    new Wall(650, 700, 500, 50),
+    // Middle Room
+    new Wall(350, 250, 300, 50),
+    new Wall(750, 250, 300, 50),
+    new Wall(900, 300, 250, 200),
+    // Bottom Right room
+    new Wall(1150, 500, 300, 50),
+    // Right top and middle room
+    new Wall(1150, 200, 150, 300),
+    new Wall(1150, 50, 150, 50),
+    // Top room
+    new Wall(800, 50, 100, 100),
+    new Wall(1000, 150, 50, 100),
 ];
-let enemies = [
-    new Enemy(500,500,walls),
-]
+let enemies = [];
+let spawnTimer = {
+    limit: 60,
+    count: 0,
+};
 
 function preload() {
 
@@ -37,7 +61,7 @@ function setup() {
     noStroke();
 
     // Initialize objects
-    user = new User(canvasWidth / 2, canvasHeight / 2, walls);
+    user = new User(650, 100, walls);
 
 }
 
@@ -48,23 +72,14 @@ function draw() {
     user.move();
     user.display();
 
-    // Move the enemies
-    for(let i = 0; i < enemies.length; i++){
-        enemies[i].move(user);
-        enemies[i].display();
-    }
-
-    // Draw a gray box 
-    //fill(50);
-    //rect(600, 100, 100, 100);
-
     // Draw the user's flashlight
     user.displayFlashlight();
 
-    // Draw circle
-    //let shade = map(dist(1000, 500, user.x, user.y), 0, 500, 200, 50);
-    //fill(shade);
-    //ellipse(900, 500, 50);
+    // Move the enemies
+    for (let i = 0; i < enemies.length; i++) {
+        enemies[i].move(user);
+        enemies[i].display(user);
+    }
 
     // Update and draw the walls
     for (let i = 0; i < walls.length; i++) {
@@ -72,4 +87,28 @@ function draw() {
         walls[i].display();
     }
 
+    // Update our spawner
+    spawnTimer.count++;
+    if (spawnTimer.count >= spawnTimer.limit) {
+        spawnEnemmy();
+        spawnTimer.count = 0;
+    }
+}
+
+function spawnEnemmy() {
+    let num = round(random(0, 3));
+    switch (num) {
+        case 0:
+            enemies.push(new Enemy(100, 700, walls));
+            break;
+        case 1:
+            enemies.push(new Enemy(100, 100, walls));
+            break;
+        case 2:
+            enemies.push(new Enemy(1500, 100, walls));
+            break;
+        case 3:
+            enemies.push(new Enemy(1500, 700, walls));
+            break;
+    }
 }
