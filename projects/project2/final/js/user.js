@@ -21,23 +21,22 @@ class User {
         this.turnSpeed = 1.5;
         // Make a square collider for the user
         this.collisionBox = {
-            l: this.x - this.w, //left
-            r: this.x + this.w, //right
-            t: this.y - this.h, //top
-            b: this.y + this.h, //bottom
+            x: this.x - this.w,
+            y: this.y - this.h,
+            w: this.size,
+            h: this.size,
         }
         this.walls = walls;
     }
 
-    update(){
+    updateBox(){
         // Update our collider box
         this.collisionBox = {
-            l: this.x - this.w,
-            r: this.x + this.w,
-            t: this.y - this.h,
-            b: this.y + this.h, 
+            x: this.x - this.w,
+            y: this.y - this.h,
+            w: this.size,
+            h: this.size,
         }
-        this.move();
     }
 
     move() {
@@ -50,12 +49,49 @@ class User {
         }
         // Move forward and backwards
         if (keyIsDown(UP_ARROW)) {
-            this.x -= sin(this.rotation) * this.moveSpeed;
-            this.y -= cos(this.rotation) * this.moveSpeed;
+            let moveX = sin(this.rotation) * this.moveSpeed;
+            let moveY = cos(this.rotation) * this.moveSpeed;
+
+            this.x -= moveX;
+            this.y -= moveY;
+            this.updateBox();
+
+            // Check collision with walls
+            let didCollide = false;
+            for(let i = 0; i < this.walls.length; i++){
+                if(this.checkCollision(this.walls[i])){
+                    didCollide = true;
+                }
+            }
+            // If we collided with a wall, stop our forward movement
+            if(didCollide){
+                this.x += moveX
+                this.y += moveY;
+                this.updateBox();
+            }
+            
         }
         else if (keyIsDown(DOWN_ARROW)) {
-            this.x += sin(this.rotation) * this.moveSpeed;
-            this.y += cos(this.rotation) * this.moveSpeed;
+            let moveX = sin(this.rotation) * this.moveSpeed;
+            let moveY = cos(this.rotation) * this.moveSpeed;
+
+            this.x += moveX;
+            this.y += moveY;
+            this.updateBox();
+
+            // Check collision with walls
+            let didCollide = false;
+            for(let i = 0; i < this.walls.length; i++){
+                if(this.checkCollision(this.walls[i])){
+                    didCollide = true;
+                }
+            }
+            // If we collided with a wall, stop our backwards movement
+            if(didCollide){
+                this.x -= moveX;
+                this.y -= moveY;
+                this.updateBox();
+            }
         }
 
     }
@@ -86,14 +122,13 @@ class User {
         triangle(this.x, this.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
     }
 
-    /*
     checkCollision(wall) {
         let didCollide = false;
         let box = this.collisionBox;
-        if (box.l >= wall.x && box.r <= wall.x + wall.w && box.b >= wall.y && box.t <= wall.y + wall.h) {
+        if (box.x + box.w >= wall.x && box.x <= wall.x + wall.w && box.y <= wall.y + wall.h && box.y + box.h >= wall.y) {
             didCollide = true;
         }
         return didCollide;
     }
-    */
+    
 }

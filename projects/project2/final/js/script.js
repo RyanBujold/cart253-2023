@@ -33,10 +33,10 @@ function setup() {
 }
 
 function draw() {
-    background(200);
+    background(0);
 
     // Move the user
-    user.update();
+    user.move();
     user.display();
 
     // Draw a gray box 
