@@ -61,6 +61,11 @@ class User extends Collider{
             this.updateBox();
         }
 
+        // Fire a bullet
+        if(keyIsDown(SHIFT)){
+            this.fireBullet();
+        }
+
         // Update the player's bullets
         for(let i = 0; i < this.bullets.length; i++){
             this.bullets[i].travel();
@@ -95,6 +100,10 @@ class User extends Collider{
             y: this.y - cos(this.rotation - this.flashlight.range) * this.flashlight.distance,
         }
         triangle(this.x, this.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
+    }
+
+    fireBullet(){
+        this.bullets.push(new Bullet(this.x, this.y, this.rotation));
     }
 
 }
