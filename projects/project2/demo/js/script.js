@@ -3,6 +3,7 @@
  * Ryan Bujold
  * 
  * A top down survival shooter using a flashlight to light your way and survive enemies.
+ * (This is a demo version)
  * 
  * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
  */
