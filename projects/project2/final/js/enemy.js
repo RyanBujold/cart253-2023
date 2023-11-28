@@ -1,15 +1,7 @@
-class Enemy {
+class Enemy extends Collider{
 
-    /**
-     * An enemy class that chases the user 
-     * @param {*} x starting horizontal point on the canvas.
-     * @param {*} y starting vertical point on the canvas.
-     * @param {*} walls the walls of the current map.
-     * @param {*} isGhost says wether the enemy should avoid collision.
-     */
     constructor(x, y, walls, isGhost = false) {
-        this.x = x;
-        this.y = y;
+        super(x,y);
         if (isGhost) {
             this.moveSpeed = 0.50;
             this.size = 75;
@@ -29,16 +21,6 @@ class Enemy {
         }
         this.walls = walls;
         this.isGhost = isGhost
-    }
-
-    updateBox() {
-        // Update our collider box
-        this.collisionBox = {
-            x: this.x - this.w,
-            y: this.y - this.h,
-            w: this.size,
-            h: this.size,
-        }
     }
 
     move(user) {
@@ -113,14 +95,5 @@ class Enemy {
         }
         ellipse(this.x, this.y, this.size);
         pop();
-    }
-
-    checkCollision(wall) {
-        let didCollide = false;
-        let box = this.collisionBox;
-        if (box.x + box.w >= wall.x && box.x <= wall.x + wall.w && box.y <= wall.y + wall.h && box.y + box.h >= wall.y) {
-            didCollide = true;
-        }
-        return didCollide;
     }
 }
