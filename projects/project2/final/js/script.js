@@ -46,12 +46,14 @@ let walls = [
     new Wall(1000, 150, 50, 100),
 ];
 let enemies = [
-    new Enemy(100, 700,walls,true),
+    new Enemy(100, 700, walls, true),
 ];
 let spawnTimer = {
     limit: 300,
     count: 0,
 };
+
+let state = "main";
 
 function preload() {
 
@@ -67,6 +69,17 @@ function setup() {
 }
 
 function draw() {
+
+    switch (state) {
+        case "main":
+            mainState();
+            break;
+    }
+
+
+}
+
+function mainState() {
     background(0);
 
     // Move the user
@@ -81,7 +94,7 @@ function draw() {
         enemies[i].move(user);
         enemies[i].display(user);
         // If the user is too close to an enemy, end the game
-        if(dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30){
+        if (dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30) {
             noLoop();
         }
     }
@@ -101,7 +114,7 @@ function draw() {
 
     // Show the number of enemies
     fill(255);
-    text("Hazard Level: "+enemies.length, 50, 50);
+    text("Hazard Level: " + enemies.length, 50, 50);
 }
 
 function spawnEnemmy() {
