@@ -8,7 +8,7 @@ class User extends Collider{
         this.rotation = 180;
         this.flashlight = {
             range: 30,
-            distance: 300,
+            distance: 500,
         };
         this.moveSpeed = 2;
         this.turnSpeed = 1.75;

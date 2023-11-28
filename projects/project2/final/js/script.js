@@ -74,9 +74,10 @@ function draw() {
         case "main":
             mainState();
             break;
+        case "lose":
+            loseState();
+            break;
     }
-
-
 }
 
 function mainState() {
@@ -95,7 +96,7 @@ function mainState() {
         enemies[i].display(user);
         // If the user is too close to an enemy, end the game
         if (dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30) {
-            noLoop();
+            state = "lose";
         }
     }
 
@@ -115,6 +116,13 @@ function mainState() {
     // Show the number of enemies
     fill(255);
     text("Hazard Level: " + enemies.length, 50, 50);
+}
+
+function loseState(){
+    background(0);
+    fill(255);
+    text("Game Over!", canvasWidth/2, canvasHeight/2 - 20);
+    text("Final Hazard Level: " + enemies.length, canvasWidth/2, canvasHeight/2);
 }
 
 function spawnEnemmy() {

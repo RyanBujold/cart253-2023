@@ -27,6 +27,8 @@ class Wall {
         this.s2;
         this.s3;
         this.s4;
+
+        this.debug = false;
     }
 
     update(user) {
@@ -40,6 +42,10 @@ class Wall {
     display() {
         push();
         fill(0);
+        if(this.debug){
+            stroke(0,0,200);
+            fill(100);
+        }
         // Shadow top
         beginShape();
         vertex(this.p1.x, this.p1.y);
