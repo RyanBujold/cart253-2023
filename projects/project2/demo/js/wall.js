@@ -39,8 +39,7 @@ class Wall {
 
     display() {
         push();
-        fill(0);//change back later, invisible shadows for debugging map
-        //stroke(0, 0, 200);
+        fill(0);
         // Shadow top
         beginShape();
         vertex(this.p1.x, this.p1.y);

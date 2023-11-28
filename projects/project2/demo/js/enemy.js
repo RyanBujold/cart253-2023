@@ -5,14 +5,21 @@ class Enemy {
      * @param {*} x starting horizontal point on the canvas.
      * @param {*} y starting vertical point on the canvas.
      * @param {*} walls the walls of the current map.
+     * @param {*} isGhost says wether the enemy should avoid collision.
      */
-    constructor(x, y, walls){
+    constructor(x, y, walls, isGhost = false) {
         this.x = x;
         this.y = y;
-        this.size = 50;
-        this.w = this.size/2;
-        this.h = this.size/2;
-        this.moveSpeed = 0.75;
+        if (isGhost) {
+            this.moveSpeed = 0.50;
+            this.size = 75;
+        }
+        else {
+            this.moveSpeed = 0.25;
+            this.size = 50;
+        }
+        this.w = this.size / 2;
+        this.h = this.size / 2;
         // Make a square collider for the user
         this.collisionBox = {
             x: this.x - this.w,
@@ -21,9 +28,10 @@ class Enemy {
             h: this.size,
         }
         this.walls = walls;
+        this.isGhost = isGhost
     }
 
-    updateBox(){
+    updateBox() {
         // Update our collider box
         this.collisionBox = {
             x: this.x - this.w,
@@ -33,37 +41,60 @@ class Enemy {
         }
     }
 
-    move(user){
+    move(user) {
         let moveX = 0;
         let moveY = 0;
         // Move the enemy towards the user.
-        if(this.x >= user.x){
+        if (this.x >= user.x) {
             moveX -= this.moveSpeed;
         }
-        if(this.x <= user.x){
+        if (this.x <= user.x) {
             moveX += this.moveSpeed;
         }
-        if(this.y >= user.y){
+        if (this.y >= user.y) {
             moveY -= this.moveSpeed;
         }
-        if(this.y <= user.y){
+        if (this.y <= user.y) {
             moveY += this.moveSpeed;
         }
 
+        // If we are a ghost, ignore collision
+        if(this.isGhost){
+            this.x += moveX;
+            this.y += moveY;
+            this.updateBox();
+            return;
+        }
+
+        // Update our movement for both the x and y axis seperately
         this.x += moveX;
+        this.updateBox();
+
+        // Check collision with walls
+        let didCollideX = false;
+        for (let i = 0; i < this.walls.length; i++) {
+            if (this.checkCollision(this.walls[i])) {
+                didCollideX = true;
+            }
+        }
+        // If we collided with a wall, stop our forward movement
+        if (didCollideX) {
+            this.x += -moveX;
+            this.updateBox();
+        }
+
         this.y += moveY;
         this.updateBox();
 
         // Check collision with walls
-        let didCollide = false;
-        for(let i = 0; i < this.walls.length; i++){
-            if(this.checkCollision(this.walls[i])){
-                didCollide = true;
+        let didCollideY = false;
+        for (let i = 0; i < this.walls.length; i++) {
+            if (this.checkCollision(this.walls[i])) {
+                didCollideY = true;
             }
         }
         // If we collided with a wall, stop our forward movement
-        if(didCollide){
-            this.x += -moveX;
+        if (didCollideY) {
             this.y += -moveY;
             this.updateBox();
         }
@@ -74,7 +105,12 @@ class Enemy {
         push();
         // Make the enemy more visible when its approaching the user
         let shade = map(dist(this.x, this.y, user.x, user.y), 0, 200, 200, 0);
-        fill(shade);
+        if (this.isGhost == false) {
+            fill(shade,0,shade);
+        } 
+        else {
+            fill(shade);
+        }
         ellipse(this.x, this.y, this.size);
         pop();
     }

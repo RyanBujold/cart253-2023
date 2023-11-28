@@ -79,6 +79,7 @@ class User {
 
         // If we collided with an enemy, end the game?
 
+
     }
 
     display() {
@@ -87,9 +88,9 @@ class User {
         fill(200, 0, 0);
         ellipse(this.x, this.y, this.size);
         // Draw a pointer for the direction the user is facing
-        stroke(0, 200, 0);
-        line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
-        noStroke();
+        //stroke(0, 200, 0);
+        //line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
+        //noStroke();
         pop();
     }
 
