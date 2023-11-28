@@ -1,18 +1,11 @@
-class User {
-    /**
-     * A user class that is controlled with arrow keys and uses a flashlight.
-     * @param {*} x starting horizontal point on the canvas.
-     * @param {*} y starting vertical point on the canvas.
-     * @param {*} walls the walls of the current map.
-     */
+class User extends Collider{
 
     constructor(x, y, walls) {
-        this.x = x;
-        this.y = y;
-        this.rotation = 180;
+        super(x,y);
         this.size = 40;
         this.w = this.size / 2;
         this.h = this.size / 2;
+        this.rotation = 180;
         this.flashlight = {
             range: 30,
             distance: 500,
@@ -27,16 +20,7 @@ class User {
             h: this.size,
         }
         this.walls = walls;
-    }
-
-    updateBox() {
-        // Update our collider box
-        this.collisionBox = {
-            x: this.x - this.w,
-            y: this.y - this.h,
-            w: this.size,
-            h: this.size,
-        }
+        this.bullets = [];
     }
 
     move() {
@@ -77,9 +61,15 @@ class User {
             this.updateBox();
         }
 
-        // If we collided with an enemy, end the game?
+        // Fire a bullet
+        if(keyIsDown(SHIFT)){
+            this.fireBullet();
+        }
 
-
+        // Update the player's bullets
+        for(let i = 0; i < this.bullets.length; i++){
+            this.bullets[i].travel();
+        }
     }
 
     display() {
@@ -91,6 +81,10 @@ class User {
         //stroke(0, 200, 0);
         //line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
         //noStroke();
+        // Draw our bullets
+        for(let i = 0; i < this.bullets.length; i++){
+            this.bullets[i].display();
+        }
         pop();
     }
 
@@ -108,13 +102,8 @@ class User {
         triangle(this.x, this.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
     }
 
-    checkCollision(object) {
-        let didCollide = false;
-        let box = this.collisionBox;
-        if (box.x + box.w >= object.x && box.x <= object.x + object.w && box.y <= object.y + object.h && box.y + box.h >= object.y) {
-            didCollide = true;
-        }
-        return didCollide;
+    fireBullet(){
+        this.bullets.push(new Bullet(this.x, this.y, this.rotation));
     }
 
 }

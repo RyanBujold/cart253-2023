@@ -3,10 +3,11 @@
  * Ryan Bujold
  * 
  * A top down survival shooter using a flashlight to light your way and survive enemies.
- * (This is a demo version)
  * 
  * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
  */
+
+// TODO add lightning that shows the cool shadows and stuff idk...
 
 "use strict";
 
@@ -47,12 +48,14 @@ let walls = [
     new Wall(1000, 150, 50, 100),
 ];
 let enemies = [
-    new Enemy(100, 700,walls,true),
+    new Enemy(100, 700, walls, true),
 ];
 let spawnTimer = {
     limit: 300,
     count: 0,
 };
+
+let state = "main";
 
 function preload() {
 
@@ -68,6 +71,18 @@ function setup() {
 }
 
 function draw() {
+
+    switch (state) {
+        case "main":
+            mainState();
+            break;
+        case "lose":
+            loseState();
+            break;
+    }
+}
+
+function mainState() {
     background(0);
 
     // Move the user
@@ -82,8 +97,8 @@ function draw() {
         enemies[i].move(user);
         enemies[i].display(user);
         // If the user is too close to an enemy, end the game
-        if(dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30){
-            noLoop();
+        if (dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30) {
+            state = "lose";
         }
     }
 
@@ -102,7 +117,14 @@ function draw() {
 
     // Show the number of enemies
     fill(255);
-    text("Hazard Level: "+enemies.length, 50, 50);
+    text("Hazard Level: " + enemies.length, 50, 50);
+}
+
+function loseState(){
+    background(0);
+    fill(255);
+    text("Game Over!", canvasWidth/2, canvasHeight/2 - 20);
+    text("Final Hazard Level: " + enemies.length, canvasWidth/2, canvasHeight/2);
 }
 
 function spawnEnemmy() {
