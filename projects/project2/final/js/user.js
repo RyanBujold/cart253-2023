@@ -20,6 +20,7 @@ class User extends Collider{
             h: this.size,
         }
         this.walls = walls;
+        this.bullets = [];
     }
 
     move() {
@@ -60,6 +61,10 @@ class User extends Collider{
             this.updateBox();
         }
 
+        // Update the player's bullets
+        for(let i = 0; i < this.bullets.length; i++){
+            this.bullets[i].travel();
+        }
     }
 
     display() {
@@ -71,6 +76,10 @@ class User extends Collider{
         //stroke(0, 200, 0);
         //line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
         //noStroke();
+        // Draw our bullets
+        for(let i = 0; i < this.bullets.length; i++){
+            this.bullets[i].display();
+        }
         pop();
     }
 

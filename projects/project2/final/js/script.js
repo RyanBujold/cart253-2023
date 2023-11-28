@@ -7,6 +7,8 @@
  * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
  */
 
+// TODO add lightning that shows the cool shadows and stuff idk...
+
 "use strict";
 
 let canvasWidth = 1600
