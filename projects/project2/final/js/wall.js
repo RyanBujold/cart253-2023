@@ -47,7 +47,6 @@ class Wall {
             fill(100);
         }
         // Shadow top
-        fill(255,0,0)
         beginShape();
         vertex(this.p1.x, this.p1.y);
         vertex(this.s1.x, this.s1.y);
@@ -55,7 +54,6 @@ class Wall {
         vertex(this.p2.x, this.p2.y);
         endShape(CLOSE);
         // Shadow left
-        fill(0,255,0)
         beginShape();
         vertex(this.p1.x, this.p1.y);
         vertex(this.s1.x, this.s1.y);
@@ -63,7 +61,6 @@ class Wall {
         vertex(this.p3.x, this.p3.y);
         endShape(CLOSE);
         // Shadow right
-        fill(0,0,255);
         beginShape();
         vertex(this.p3.x, this.p3.y);
         vertex(this.s3.x, this.s3.y);
@@ -71,7 +68,6 @@ class Wall {
         vertex(this.p4.x, this.p4.y);
         endShape(CLOSE);
         // Shadow bottom
-        fill(255,0,255)
         beginShape();
         vertex(this.p4.x, this.p4.y);
         vertex(this.s4.x, this.s4.y);

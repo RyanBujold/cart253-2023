@@ -2,10 +2,12 @@ class Bullet extends Collider{
 
     constructor(x,y,rotation){
         super(x,y);
-        this.moveSpeed = 0.1;
+        this.moveSpeed = 10;
         this.rotation = rotation;
-        this.w = 5;
-        this.h = 5;
+        this.size = 5;
+        this.w = this.size;
+        this.h = this.size;
+        this.isAlive = true;
     }
 
     display(){
@@ -13,6 +15,24 @@ class Bullet extends Collider{
         fill(212, 146, 25);
         rect(this.x,this.y,this.w,this.h);
         pop();
+    }
+
+    updateBox() {
+        // Update our collider box
+        this.collisionBox = {
+            x: this.x,
+            y: this.y,
+            w: this.w,
+            h: this.h,
+        }
+
+        if(this.debug){
+            push();
+            stroke(200,0,0);
+            fill(0,200,0);
+            rect(this.collisionBox.x, this.collisionBox.y, this.collisionBox.w, this.collisionBox.h);
+            pop();
+        }
     }
 
     travel(){

@@ -88,18 +88,24 @@ function mainState() {
     // Move the user
     user.move();
     user.display();
+    user.updateBullets(enemies);
+    if (user.checkDefeat()) {
+        state = "lose";
+        return;
+    }
 
     // Draw the user's flashlight
     user.displayFlashlight();
 
     // Move the enemies
     for (let i = 0; i < enemies.length; i++) {
+        if (!enemies[i].isAlive) {
+            // Remove the element from the array
+            enemies.splice(i, 1);
+            continue;
+        }
         enemies[i].move(user);
         enemies[i].display(user);
-        // If the user is too close to an enemy, end the game
-        if (dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30) {
-            state = "lose";
-        }
     }
 
     // Update and draw the walls
@@ -120,11 +126,11 @@ function mainState() {
     text("Hazard Level: " + enemies.length, 50, 50);
 }
 
-function loseState(){
+function loseState() {
     background(0);
     fill(255);
-    text("Game Over!", canvasWidth/2, canvasHeight/2 - 20);
-    text("Final Hazard Level: " + enemies.length, canvasWidth/2, canvasHeight/2);
+    text("Game Over!", canvasWidth / 2, canvasHeight / 2 - 20);
+    text("Final Hazard Level: " + enemies.length, canvasWidth / 2, canvasHeight / 2);
 }
 
 function spawnEnemmy() {

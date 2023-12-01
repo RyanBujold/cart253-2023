@@ -21,6 +21,7 @@ class Enemy extends Collider{
         }
         this.walls = walls;
         this.isGhost = isGhost
+        this.isAlive = true;
     }
 
     move(user) {

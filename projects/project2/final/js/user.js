@@ -1,7 +1,7 @@
-class User extends Collider{
+class User extends Collider {
 
     constructor(x, y, walls) {
-        super(x,y);
+        super(x, y);
         this.size = 40;
         this.w = this.size / 2;
         this.h = this.size / 2;
@@ -21,6 +21,10 @@ class User extends Collider{
         }
         this.walls = walls;
         this.bullets = [];
+        this.fireTimer = {
+            limit: 60,
+            count: 0,
+        }
     }
 
     move() {
@@ -60,15 +64,51 @@ class User extends Collider{
             this.y += -moveY;
             this.updateBox();
         }
+    }
 
+    // Check if the user collided with an enemy. return true if the user collides
+    checkDefeat() {
+        for (let i = 0; i < enemies.length; i++) {
+            // If the user is too close to an enemy, end the game
+            if (dist(user.x, user.y, enemies[i].x, enemies[i].y) < 30) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    updateBullets(enemies) {
         // Fire a bullet
-        if(keyIsDown(SHIFT)){
+        // Update and check a timer to make sure we don't fire continuously
+        this.fireTimer.count++;
+        if (keyIsDown(CONTROL) && this.fireTimer.count >= this.fireTimer.limit) {
             this.fireBullet();
+            this.fireTimer.count = 0;
         }
 
         // Update the player's bullets
-        for(let i = 0; i < this.bullets.length; i++){
+        for (let i = 0; i < this.bullets.length; i++) {
+            // Remove the inactive bulltes
+            if(!this.bullets[i].isAlive){
+                this.bullets.splice(i,1);
+                continue;
+            }
+            // Move the bullet
             this.bullets[i].travel();
+            // Check collision with walls
+            for(let w = 0; w < this.walls.length; w++){
+                if(this.bullets[i].checkCollision(this.walls[w])){
+                    this.bullets[i].isAlive = false;
+                }
+            }
+            // Check collision with enemies
+            for(let e = 0; e < enemies.length; e++){
+                if(this.bullets[i].checkCollision(enemies[e])){
+                    this.bullets[i].isAlive = false;
+                    // Damage the enemy
+                    enemies[e].isAlive = false;
+                }
+            }
         }
     }
 
@@ -82,7 +122,7 @@ class User extends Collider{
         //line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
         //noStroke();
         // Draw our bullets
-        for(let i = 0; i < this.bullets.length; i++){
+        for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].display();
         }
         pop();
@@ -102,7 +142,7 @@ class User extends Collider{
         triangle(this.x, this.y, leftSightPoint.x, leftSightPoint.y, rightSightPoint.x, rightSightPoint.y);
     }
 
-    fireBullet(){
+    fireBullet() {
         this.bullets.push(new Bullet(this.x, this.y, this.rotation));
     }
 

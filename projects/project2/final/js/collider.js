@@ -11,6 +11,8 @@ class Collider {
             w:this.w,
             h:this.h,
         }
+
+        this.debug = false;
     }
 
     updateBox() {
@@ -20,6 +22,14 @@ class Collider {
             y: this.y - this.h,
             w: this.size,
             h: this.size,
+        }
+
+        if(this.debug){
+            push();
+            stroke(200,0,0);
+            fill(0,200,0);
+            rect(this.collisionBox.x, this.collisionBox.y, this.collisionBox.w, this.collisionBox.h);
+            pop();
         }
     }
 
