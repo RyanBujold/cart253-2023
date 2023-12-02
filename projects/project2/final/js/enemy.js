@@ -7,7 +7,7 @@ class Enemy extends Collider{
             this.size = 75;
         }
         else {
-            this.moveSpeed = 0;//0.30;
+            this.moveSpeed = 0.30;
             this.size = 50;
         }
         this.w = this.size / 2;

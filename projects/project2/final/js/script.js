@@ -48,18 +48,19 @@ let walls = [
     new Wall(1000, 150, 50, 100),
 ];
 let enemies = [
-    //new Enemy(100, 700, walls, true),
+    new Enemy(100, 700, walls, true),
 ];
 let spawnTimer = {
     limit: 300,
     count: 0,
 };
 let points = 0;
+let state = "title";
 
-let state = "main";
+let titleFont;
 
 function preload() {
-
+    titleFont = loadFont("assets/HVD_Bodedo.otf");
 }
 
 function setup() {
@@ -72,8 +73,10 @@ function setup() {
 }
 
 function draw() {
-
     switch (state) {
+        case "title":
+            titleState();
+            break;
         case "main":
             mainState();
             break;
@@ -131,10 +134,49 @@ function mainState() {
 
 function loseState() {
     background(0);
+    push();
+    textFont(titleFont);
+    fill(150,0,0);
+    textSize(70);
+    text("Game Over", 100, 100);
     fill(255);
-    text("Game Over!", canvasWidth / 2, canvasHeight / 2 - 40);
-    text("Final Score: " + points, canvasWidth / 2, canvasHeight / 2 - 20);
-    text("Final Hazard Level: " + enemies.length, canvasWidth / 2, canvasHeight / 2);
+    textSize(40);
+    text("Final Score: " + points, 100, 250);
+    text("Final Hazard Level: " + enemies.length, 100, 350);
+    textSize(20);
+    text("Press Enter To Restart", 1100, 700);
+    pop();
+
+    if (keyIsDown(ENTER)) {
+        reset();
+        state = "main";
+    }
+}
+
+function titleState() {
+    background(0);
+
+    push();
+    fill(255);
+    textFont(titleFont);
+    textSize(70);
+    text("DARK HOUSE", 490, 300);
+    textSize(40);
+    text("PRESS ENTER", 590, 380);
+    pop();
+
+    if (keyIsDown(ENTER)) {
+        state = "main";
+    }
+}
+
+function reset() {
+    user = new User(650, 100, walls);
+    enemies = [
+        new Enemy(100, 700, walls, true),
+    ];
+    spawnTimer.count = 0;
+    points = 0;
 }
 
 function spawnEnemmy() {
