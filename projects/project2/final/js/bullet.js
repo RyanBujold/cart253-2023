@@ -2,7 +2,7 @@ class Bullet extends Collider{
 
     constructor(x,y,rotation){
         super(x,y);
-        this.moveSpeed = 10;
+        this.moveSpeed = 15;
         this.rotation = rotation;
         this.size = 5;
         this.w = this.size;

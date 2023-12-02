@@ -8,7 +8,7 @@ class User extends Collider {
         this.rotation = 180;
         this.flashlight = {
             range: 30,
-            distance: 500,
+            distance: 400,
         };
         this.moveSpeed = 2;
         this.turnSpeed = 1.75;
@@ -105,8 +105,13 @@ class User extends Collider {
             for(let e = 0; e < enemies.length; e++){
                 if(this.bullets[i].checkCollision(enemies[e])){
                     this.bullets[i].isAlive = false;
-                    // Damage the enemy
-                    enemies[e].isAlive = false;
+                    // Damage the enemy if they are not a ghost
+                    if(!enemies[e].isGhost){
+                        enemies[e].health --;
+                        if(enemies[e].health <= 0){
+                            enemies[e].isAlive = false;
+                        } 
+                    }
                 }
             }
         }

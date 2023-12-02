@@ -1,8 +1,7 @@
-class Wall {
+class Wall extends Collider{
 
     constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.w = w;
         this.h = h;
         // The 4 corners of the wall
@@ -28,7 +27,7 @@ class Wall {
         this.s3;
         this.s4;
 
-        this.debug = true;
+        this.debug = false;
     }
 
     update(user) {

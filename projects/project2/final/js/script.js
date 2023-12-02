@@ -48,12 +48,13 @@ let walls = [
     new Wall(1000, 150, 50, 100),
 ];
 let enemies = [
-    new Enemy(100, 700, walls, true),
+    //new Enemy(100, 700, walls, true),
 ];
 let spawnTimer = {
     limit: 300,
     count: 0,
 };
+let points = 0;
 
 let state = "main";
 
@@ -102,6 +103,7 @@ function mainState() {
         if (!enemies[i].isAlive) {
             // Remove the element from the array
             enemies.splice(i, 1);
+            points += 10;
             continue;
         }
         enemies[i].move(user);
@@ -124,12 +126,14 @@ function mainState() {
     // Show the number of enemies
     fill(255);
     text("Hazard Level: " + enemies.length, 50, 50);
+    text("Score: " + points, 50, 70);
 }
 
 function loseState() {
     background(0);
     fill(255);
-    text("Game Over!", canvasWidth / 2, canvasHeight / 2 - 20);
+    text("Game Over!", canvasWidth / 2, canvasHeight / 2 - 40);
+    text("Final Score: " + points, canvasWidth / 2, canvasHeight / 2 - 20);
     text("Final Hazard Level: " + enemies.length, canvasWidth / 2, canvasHeight / 2);
 }
 

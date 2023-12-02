@@ -3,11 +3,11 @@ class Enemy extends Collider{
     constructor(x, y, walls, isGhost = false) {
         super(x,y);
         if (isGhost) {
-            this.moveSpeed = 0.50;
+            this.moveSpeed = 0.40;
             this.size = 75;
         }
         else {
-            this.moveSpeed = 0.25;
+            this.moveSpeed = 0;//0.30;
             this.size = 50;
         }
         this.w = this.size / 2;
@@ -20,7 +20,8 @@ class Enemy extends Collider{
             h: this.size,
         }
         this.walls = walls;
-        this.isGhost = isGhost
+        this.isGhost = isGhost;
+        this.health = 3;
         this.isAlive = true;
     }
 
@@ -41,7 +42,7 @@ class Enemy extends Collider{
             moveY += this.moveSpeed;
         }
 
-        // If we are a ghost, ignore collision
+        // If we are a ghost, ignore wall collision
         if(this.isGhost){
             this.x += moveX;
             this.y += moveY;

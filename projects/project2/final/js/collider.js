@@ -33,10 +33,11 @@ class Collider {
         }
     }
 
-    checkCollision(entity) {
+    checkCollision(collider) {
         // Check for collision with another entity
         let didCollide = false;
         let box = this.collisionBox;
+        let entity = collider.collisionBox;
         if (box.x + box.w >= entity.x && box.x <= entity.x + entity.w && box.y <= entity.y + entity.h && box.y + box.h >= entity.y) {
             didCollide = true;
         }
