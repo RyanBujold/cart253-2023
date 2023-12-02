@@ -18,10 +18,10 @@ class Collider {
     updateBox() {
         // Update our collider box
         this.collisionBox = {
-            x: this.x - this.w,
-            y: this.y - this.h,
-            w: this.size,
-            h: this.size,
+            x: this.x - this.w/2,
+            y: this.y - this.h/2,
+            w: this.w,
+            h: this.h,
         }
 
         if(this.debug){

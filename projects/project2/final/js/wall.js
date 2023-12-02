@@ -26,6 +26,7 @@ class Wall extends Collider{
         this.s2;
         this.s3;
         this.s4;
+        this.shadowAlpha = 255;
 
         this.debug = false;
     }
@@ -36,11 +37,24 @@ class Wall extends Collider{
         this.s2 = this.getShadow(user, this.p2);
         this.s3 = this.getShadow(user, this.p3);
         this.s4 = this.getShadow(user, this.p4);
+        // Update collision
+        this.updateBox();
+    }
+
+    // Override the collision updater to fit a rectangle rather than a circle
+    updateBox() {
+        // Update our collider box
+        this.collisionBox = {
+            x: this.x,
+            y: this.y,
+            w: this.w,
+            h: this.h,
+        }
     }
 
     display() {
         push();
-        fill(0);
+        fill(0,0,0,this.shadowAlpha);
         if(this.debug){
             stroke(0,0,200);
             fill(100);

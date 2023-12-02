@@ -54,6 +54,10 @@ let spawnTimer = {
     limit: 300,
     count: 0,
 };
+let lightningTimer = {
+    limit: 600,
+    count: 0,
+}
 let points = 0;
 let state = "title";
 
@@ -87,7 +91,13 @@ function draw() {
 }
 
 function mainState() {
-    background(0);
+    // Lightning
+    lightningTimer.count ++;
+    if(lightningTimer.count >= lightningTimer.limit){
+        lightningTimer.count = 0;
+    }
+    let bg = map(lightningTimer.count, 0, 100, 255, 0);
+    background(bg);
 
     // Move the user
     user.move();
@@ -115,6 +125,8 @@ function mainState() {
 
     // Update and draw the walls
     for (let i = 0; i < walls.length; i++) {
+        // Make sure the shadow transparency is consistent with the lighting effect
+        walls[i].shadowAlpha = map(lightningTimer.count, 0, 100, 0, 255);
         walls[i].update(user);
         walls[i].display();
     }
@@ -127,7 +139,7 @@ function mainState() {
     }
 
     // Show the number of enemies
-    fill(255);
+    fill(200);
     text("Hazard Level: " + enemies.length, 50, 50);
     text("Score: " + points, 50, 70);
 }
@@ -143,6 +155,7 @@ function loseState() {
     textSize(40);
     text("Final Score: " + points, 100, 250);
     text("Final Hazard Level: " + enemies.length, 100, 350);
+    fill(200);
     textSize(20);
     text("Press Enter To Restart", 1100, 700);
     pop();
@@ -158,11 +171,13 @@ function titleState() {
 
     push();
     fill(255);
+    triangle(490, 280, 1090, 280, 760, 160);
     textFont(titleFont);
     textSize(70);
-    text("DARK HOUSE", 490, 300);
+    text("DARK HOUSE", 490, 360);
+    fill(200);
     textSize(40);
-    text("PRESS ENTER", 590, 380);
+    text("PRESS ENTER", 590, 430);
     pop();
 
     if (keyIsDown(ENTER)) {

@@ -3,8 +3,8 @@ class User extends Collider {
     constructor(x, y, walls) {
         super(x, y);
         this.size = 40;
-        this.w = this.size / 2;
-        this.h = this.size / 2;
+        this.w = this.size;
+        this.h = this.size;
         this.rotation = 180;
         this.flashlight = {
             range: 30,
@@ -12,13 +12,6 @@ class User extends Collider {
         };
         this.moveSpeed = 2;
         this.turnSpeed = 1.75;
-        // Make a square collider for the user
-        this.collisionBox = {
-            x: this.x - this.w,
-            y: this.y - this.h,
-            w: this.size,
-            h: this.size,
-        }
         this.walls = walls;
         this.bullets = [];
         this.fireTimer = {

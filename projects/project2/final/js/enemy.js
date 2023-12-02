@@ -7,18 +7,11 @@ class Enemy extends Collider{
             this.size = 75;
         }
         else {
-            this.moveSpeed = 0.30;
+            this.moveSpeed = Math.random() * 0.50;
             this.size = 50;
         }
-        this.w = this.size / 2;
-        this.h = this.size / 2;
-        // Make a square collider for the user
-        this.collisionBox = {
-            x: this.x - this.w,
-            y: this.y - this.h,
-            w: this.size,
-            h: this.size,
-        }
+        this.w = this.size;
+        this.h = this.size;
         this.walls = walls;
         this.isGhost = isGhost;
         this.health = 3;
