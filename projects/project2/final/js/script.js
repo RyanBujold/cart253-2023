@@ -4,7 +4,13 @@
  * 
  * A top down survival shooter using a flashlight to light your way and survive enemies.
  * 
+ * Credits: 
  * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE
+ * HVD_Bodedo font licence in files
+ * darkness music: https://opengameart.org/content/in-darkness
+ * gun shot sound: https://freesound.org/people/Bird_man/sounds/275151/
+ * organ music: https://opengameart.org/content/second-organ-song
+ * thunder sound: https://freesound.org/people/straget/sounds/527664/
  */
 
 // TODO add lightning that shows the cool shadows and stuff idk...
@@ -55,16 +61,31 @@ let spawnTimer = {
     count: 0,
 };
 let lightningTimer = {
-    limit: 600,
+    limit: 900,
     count: 0,
 }
 let points = 0;
 let state = "title";
 
 let titleFont;
+let gunShotSFX;
+let lightningSFX;
+let footstepSFX;
+let mainMusic;
+let loseMusic;
 
 function preload() {
     titleFont = loadFont("assets/HVD_Bodedo.otf");
+    gunShotSFX = loadSound("assets/sounds/gunShot.wav");
+    gunShotSFX.setVolume(0.2);
+    lightningSFX = loadSound("assets/sounds/thunder.wav");
+    lightningSFX.setVolume(1.7);
+    footstepSFX = loadSound("assets/sounds/footsteps.wav");
+    footstepSFX.setVolume(2.0);
+    loseMusic = loadSound("assets/sounds/organMusic.mp3");
+    loseMusic.setVolume(0.5);
+    mainMusic = loadSound("assets/sounds/darknessMusic.mp3");
+    mainMusic.setVolume(0.1);
 }
 
 function setup() {
@@ -73,7 +94,7 @@ function setup() {
     noStroke();
 
     // Initialize objects
-    user = new User(650, 100, walls);
+    user = new User(650, 100, walls, gunShotSFX, footstepSFX);
 }
 
 function draw() {
@@ -91,10 +112,17 @@ function draw() {
 }
 
 function mainState() {
+    // Play the main state music
+    if(!mainMusic.isPlaying()){
+        mainMusic.play();
+        mainMusic.loop();
+    }
+
     // Lightning
     lightningTimer.count ++;
     if(lightningTimer.count >= lightningTimer.limit){
         lightningTimer.count = 0;
+        lightningSFX.play();
     }
     let bg = map(lightningTimer.count, 0, 100, 255, 0);
     background(bg);
@@ -104,6 +132,8 @@ function mainState() {
     user.display();
     user.updateBullets(enemies);
     if (user.checkDefeat()) {
+        mainMusic.stop();
+        user.footstepSFX.stop();
         state = "lose";
         return;
     }
@@ -145,6 +175,12 @@ function mainState() {
 }
 
 function loseState() {
+    // Play the lose state music
+    if(!loseMusic.isPlaying()){
+        loseMusic.play();
+        loseMusic.loop();
+    }
+
     background(0);
     push();
     textFont(titleFont);
@@ -162,6 +198,7 @@ function loseState() {
 
     if (keyIsDown(ENTER)) {
         reset();
+        loseMusic.stop();
         state = "main";
     }
 }
@@ -186,11 +223,12 @@ function titleState() {
 }
 
 function reset() {
-    user = new User(650, 100, walls);
+    user = new User(650, 100, walls, gunShotSFX, footstepSFX);
     enemies = [
         new Enemy(100, 700, walls, true),
     ];
     spawnTimer.count = 0;
+    lightningTimer.count = 0;
     points = 0;
 }
 

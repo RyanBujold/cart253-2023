@@ -1,6 +1,6 @@
 class User extends Collider {
 
-    constructor(x, y, walls) {
+    constructor(x, y, walls, gunShotSFX, footstepSFX) {
         super(x, y);
         this.size = 40;
         this.w = this.size;
@@ -18,10 +18,15 @@ class User extends Collider {
             limit: 60,
             count: 0,
         }
+        this.panner = new p5.Panner3D();
+        this.gunShotSFX = gunShotSFX;
+        this.footstepSFX = footstepSFX;
+        this.panner.process(footstepSFX);
     }
 
     move() {
         // Rotate the user right or left
+        let playFootsteps = false;
         if (keyIsDown(LEFT_ARROW)) {
             this.rotation += this.turnSpeed;
         }
@@ -34,10 +39,12 @@ class User extends Collider {
         if (keyIsDown(UP_ARROW)) {
             moveX = -sin(this.rotation) * this.moveSpeed;
             moveY = -cos(this.rotation) * this.moveSpeed;
+            playFootsteps = true;
         }
         else if (keyIsDown(DOWN_ARROW)) {
             moveX = sin(this.rotation) * this.moveSpeed;
             moveY = cos(this.rotation) * this.moveSpeed;
+            playFootsteps = true;
         }
 
         this.x += moveX;
@@ -56,7 +63,18 @@ class User extends Collider {
             this.x += -moveX
             this.y += -moveY;
             this.updateBox();
+            this.footstepSFX.stop();
         }
+        else if (!this.footstepSFX.isPlaying() && playFootsteps) {
+            // play the footsteps sounds if we are moving
+            this.footstepSFX.play();
+        }
+        else if (!playFootsteps) {
+            this.footstepSFX.stop();
+        }
+
+        // Set the position of where the sound is comming from to our footstep
+        this.panner.set(this.x - width / 2, this.y - height / 2, 0, 0.1);
     }
 
     // Check if the user collided with an enemy. return true if the user collides
@@ -82,28 +100,28 @@ class User extends Collider {
         // Update the player's bullets
         for (let i = 0; i < this.bullets.length; i++) {
             // Remove the inactive bulltes
-            if(!this.bullets[i].isAlive){
-                this.bullets.splice(i,1);
+            if (!this.bullets[i].isAlive) {
+                this.bullets.splice(i, 1);
                 continue;
             }
             // Move the bullet
             this.bullets[i].travel();
             // Check collision with walls
-            for(let w = 0; w < this.walls.length; w++){
-                if(this.bullets[i].checkCollision(this.walls[w])){
+            for (let w = 0; w < this.walls.length; w++) {
+                if (this.bullets[i].checkCollision(this.walls[w])) {
                     this.bullets[i].isAlive = false;
                 }
             }
             // Check collision with enemies
-            for(let e = 0; e < enemies.length; e++){
-                if(this.bullets[i].checkCollision(enemies[e])){
+            for (let e = 0; e < enemies.length; e++) {
+                if (this.bullets[i].checkCollision(enemies[e])) {
                     this.bullets[i].isAlive = false;
                     // Damage the enemy if they are not a ghost
-                    if(!enemies[e].isGhost){
-                        enemies[e].health --;
-                        if(enemies[e].health <= 0){
+                    if (!enemies[e].isGhost) {
+                        enemies[e].health--;
+                        if (enemies[e].health <= 0) {
                             enemies[e].isAlive = false;
-                        } 
+                        }
                     }
                 }
             }
@@ -115,10 +133,6 @@ class User extends Collider {
         // Draw the user
         fill(200, 0, 0);
         ellipse(this.x, this.y, this.size);
-        // Draw a pointer for the direction the user is facing
-        //stroke(0, 200, 0);
-        //line(this.x, this.y, this.x - sin(this.rotation) * 50, this.y - cos(this.rotation) * 50);
-        //noStroke();
         // Draw our bullets
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].display();
@@ -141,7 +155,8 @@ class User extends Collider {
     }
 
     fireBullet() {
-        this.bullets.push(new Bullet(this.x, this.y, this.rotation));
+        this.gunShotSFX.play();
+        this.bullets.push(new Bullet(this.x - 2.5, this.y, this.rotation));
     }
 
 }

@@ -14,7 +14,7 @@ class Enemy extends Collider{
         this.h = this.size;
         this.walls = walls;
         this.isGhost = isGhost;
-        this.health = 3;
+        this.health = 5;
         this.isAlive = true;
     }
 
