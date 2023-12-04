@@ -1,5 +1,12 @@
 class Wall extends Collider{
 
+    /**
+     * A wall class that casts shadows based on the user's position.
+     * @param {*} x The x position
+     * @param {*} y The y position
+     * @param {*} w The width
+     * @param {*} h The height
+     */
     constructor(x, y, w, h) {
         super(x,y);
         this.w = w;

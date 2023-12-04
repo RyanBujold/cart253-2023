@@ -1,5 +1,12 @@
 class Enemy extends Collider{
 
+    /**
+     * An enemy class that travels and hunts down the user. 
+     * @param {*} x The starting x position
+     * @param {*} y The starting y position
+     * @param {*} walls The walls of the current map
+     * @param {*} isGhost True if the enemy is a ghost
+     */
     constructor(x, y, walls, isGhost = false) {
         super(x,y);
         if (isGhost) {

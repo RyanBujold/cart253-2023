@@ -1,7 +1,15 @@
 # Final Project - Dark House
 ## Ryan Bujold 
 
-A top down survival shooter using a flashlight to light your way and survive enemies.
+A top down survival shooter using a flashlight to light your way and survive enemies. Try and get a high score by defeating 
+the ever spawning enemies and watch out for the ghost! Use your flashlight to find your way around and your gun to fight back!
+
+Controls: 
+- Up Arrow: Move forwards
+- Down Arrow: Move backwards
+- Left Arrow: Turn left
+- Right Arrow: Turn right
+- Ctrl: fire a bullet
 
 Credits: 
 * Help with shadows programming from this video: https://www.youtube.com/watch?v=HizBndP0YEE

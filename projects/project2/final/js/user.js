@@ -1,5 +1,13 @@
 class User extends Collider {
 
+    /**
+     * A class for a user that moves and shoots enemies.
+     * @param {*} x Starting x position
+     * @param {*} y Starting y position
+     * @param {*} walls The walls of the current map
+     * @param {*} gunShotSFX The gun shot sound effect
+     * @param {*} footstepSFX The footstep sound effect
+     */
     constructor(x, y, walls, gunShotSFX, footstepSFX) {
         super(x, y);
         this.size = 40;

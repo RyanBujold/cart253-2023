@@ -1,5 +1,11 @@
 class Bullet extends Collider{
 
+    /**
+     * A class for a bullet that travels and collides with walls and enemies.
+     * @param {*} x The starting x position
+     * @param {*} y The starting y position
+     * @param {*} rotation The direction the bullet is traveling in degrees
+     */
     constructor(x,y,rotation){
         super(x,y);
         this.moveSpeed = 15;
@@ -18,7 +24,7 @@ class Bullet extends Collider{
     }
 
     updateBox() {
-        // Update our collider box
+        // Update our collider for a rectangle
         this.collisionBox = {
             x: this.x,
             y: this.y,

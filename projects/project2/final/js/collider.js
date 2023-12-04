@@ -1,4 +1,10 @@
 class Collider {
+
+    /**
+     * A class for a collider object that performs collision with other collider objects.
+     * @param {*} x The x position
+     * @param {*} y The y position
+     */
     constructor(x,y){
         this.x = x;
         this.y = y;

@@ -13,8 +13,6 @@
  * thunder sound: https://freesound.org/people/straget/sounds/527664/
  */
 
-// TODO add lightning that shows the cool shadows and stuff idk...
-
 "use strict";
 
 let canvasWidth = 1600
@@ -75,7 +73,9 @@ let mainMusic;
 let loseMusic;
 
 function preload() {
+    // Load fonts
     titleFont = loadFont("assets/HVD_Bodedo.otf");
+    // Load music and sound effects
     gunShotSFX = loadSound("assets/sounds/gunShot.wav");
     gunShotSFX.setVolume(0.2);
     lightningSFX = loadSound("assets/sounds/thunder.wav");
