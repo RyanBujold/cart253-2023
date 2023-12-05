@@ -138,6 +138,8 @@ function mainState() {
     if (user.checkDefeat()) {
         mainMusic.stop();
         user.footstepSFX.stop();
+        lightningSFX.stop();
+        gunShotSFX.stop();
         state = "lose";
         return;
     }
