@@ -62,6 +62,10 @@ let lightningTimer = {
     limit: 900,
     count: 0,
 }
+let fadeTimer = {
+    limit: 120,
+    count: 0,
+}
 let points = 0;
 let state = "title";
 
@@ -181,26 +185,35 @@ function loseState() {
         loseMusic.loop();
     }
 
-    background(0);
-    push();
-    textFont(titleFont);
-    fill(150,0,0);
-    textSize(70);
-    text("Game Over", 100, 100);
-    fill(255);
-    textSize(40);
-    text("Final Score: " + points, 100, 250);
-    text("Final Hazard Level: " + enemies.length, 100, 350);
-    fill(200);
-    textSize(20);
-    text("Press Enter To Restart", 1100, 700);
-    pop();
-
-    if (keyIsDown(ENTER)) {
-        reset();
-        loseMusic.stop();
-        state = "main";
+    // Fading transition
+    if(fadeTimer.count <= fadeTimer.limit){
+        let alpha = map(fadeTimer.count, 0, fadeTimer.limit, 0, 255);
+        background(0,0,0,alpha);
     }
+    else {
+        push();
+        background(0);
+        textFont(titleFont);
+        fill(150,0,0);
+        textSize(70);
+        text("Game Over", 100, 100);
+        fill(255);
+        textSize(40);
+        text("Final Score: " + points, 100, 250);
+        text("Final Hazard Level: " + enemies.length, 100, 350);
+        fill(200);
+        textSize(20);
+        text("Press Enter To Restart", 1100, 700);
+        pop();
+    
+        if (keyIsDown(ENTER)) {
+            reset();
+            loseMusic.stop();
+            state = "main";
+        }
+    }
+    fadeTimer.count ++;
+
 }
 
 function titleState() {
@@ -229,6 +242,7 @@ function reset() {
     ];
     spawnTimer.count = 0;
     lightningTimer.count = 0;
+    fadeTimer.count = 0;
     points = 0;
 }
 
